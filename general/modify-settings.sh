@@ -101,7 +101,7 @@ if [[ -z "${server}" || "${server}" =~ ^[Yy]$ ]]; then
     sudo pmset -a autorestart 1
 
     # Keep tcp connections alive
-    sudo pmset -a tcpkeepalive 
+    sudo pmset -a tcpkeepalive 1
     
     # Wake on Magic Packet from LAN
     sudo pmset -a womp 1
