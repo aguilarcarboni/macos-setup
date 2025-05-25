@@ -1,6 +1,6 @@
-# !/bin/bash
+#!/bin/bash
 
-# This script is used install the user's necesary software for macOS.
+# This script is used to install the user's necesary software for macOS.
 
 set -e
 set -o pipefail
@@ -10,7 +10,16 @@ set -o pipefail
 ###############################################################################
 
 echo "Installing essential software..."
-read -p "Is this a developer machine? (Y/n): " developer
+
+# Get 'server' and 'developer' from positional arguments, or default to null
+server="${1:-}"
+developer="${2:-}"
+
+if [[ -z "$server" || -z "$developer" ]]; then
+    echo "Error: Both 'server' and 'developer' arguments must be provided."
+    echo "Usage: $0 <server> <developer>"
+    exit 1
+fi
 
 # Download Xcode CLI tools
 if ! xcode-select -p &> /dev/null; then
@@ -25,14 +34,28 @@ brew update
 brew upgrade
 
 # Install essential packages
-brew install git btop nmap cmatrix fastfetch neovim
-brew install gnupg
+brew install git btop nmap cmatrix fastfetch neovim gnupg
+
+if [[ -z "${server}" || "${server}" =~ ^[Yy]$ ]]; then
+
+    # Install VirtualBox
+    brew install --cask virtualbox
+
+    # Make Virtual Machines directories
+    mkdir -p ~/Virtual\ Machines/Disk\ Images
+    mkdir -p ~/Virtual\ Machines/Home\ Assistant
+
+    # TODO: Install Home Assistant
+    
+    exit 0
+fi
 
 # Install Python
 brew install pyenv pyenv-virtualenv
-pyenv install 3.11.9
+pyenv install --skip-existing 3.11.9
 pyenv global 3.11.9
 
+# Install developer packages if install is for a developer
 if [[ -z "${developer}" || "${developer}" =~ ^[Yy]$ ]]; then
 
     brew install google-cloud-sdk
@@ -59,20 +82,26 @@ fi
 # Get Dotfiles
 ###############################################################################
 
-sh get-dotfiles.sh
+read -p "Do you want to get dotfiles? (Y/n): " dotfiles
+if [[ -z "${dotfiles}" || "${dotfiles}" =~ ^[Yy]$ ]]; then
+    sh utils/get-dotfiles.sh
+fi
 
 ###############################################################################
 # Generate SSH key for Github                                   
 ###############################################################################
 
-echo "Generating SSH key for Github"
-ssh-keygen -t ecdsa -b 521 -C "aguilarcarboni@gmail.com"
-cat ~/.ssh/id_ecdsa.pub
-read -sp "Please make sure you have copied this SSH key and will add it to Github." key_confirmation
+read -p "Do you want to generate an SSH key for Github? (Y/n): " ssh_key
+if [[ -z "${ssh_key}" || "${ssh_key}" =~ ^[Yy]$ ]]; then
+    echo "Generating SSH key for Github. Save it in the default location."
+    ssh-keygen -t ecdsa -b 521 -C "aguilarcarboni@gmail.com"
+    cat ~/.ssh/id_ecdsa.pub
+    read -sp "Please make sure you have copied this SSH key and will add it to Github." key_confirmation
 
-echo "Creating SSH agent to store keychain"
-eval "$(ssh-agent -s)"
-ssh-add --apple-use-keychain ~/.ssh/id_ecdsa
+    echo "\nCreating SSH agent to store keychain."
+    eval "$(ssh-agent -s)"
+    ssh-add --apple-use-keychain ~/.ssh/id_ecdsa
+fi
 
 ###############################################################################
 # Install Essential Applications
@@ -83,13 +112,13 @@ echo "Installing essential apps..."
 brew install mas
 
 # ChatGPT
-brew install --cask chatgpt
+#brew install --cask chatgpt
 
 # Notion
-brew install --cask notion
+#brew install --cask notion
 
 # Obsidian
-brew install --cask obsidian
+#brew install --cask obsidian
 
 # Collections
 mas install 1568395334
@@ -128,8 +157,8 @@ if [[ -z "${figma}" || "${figma}" =~ ^[Yy]$ ]]; then
 fi
 
 # Office tools
-read -p "Do you want to install Office tools? (Y/n): " microsoft
-if [[ -z "${microsoft}" || "${microsoft}" =~ ^[Yy]$ ]]; then
+read -p "Do you want to install Office tools? (Y/n): " office_tools
+if [[ -z "${office_tools}" || "${office_tools}" =~ ^[Yy]$ ]]; then
 
     # Pages
     mas install 409201541
@@ -154,9 +183,7 @@ if [[ -z "${developer}" || "${developer}" =~ ^[Yy]$ ]]; then
     brew install watchman
 
     # Windsurf
-    if [[ -z "${developer}" || "${developer}" =~ ^[Yy]$ ]]; then
-        brew install --cask windsurf
-    fi
+    brew install --cask windsurf
     
     # Xcode
     mas install 497799835
@@ -234,9 +261,6 @@ if [[ -z "${zoom}" || "${zoom}" =~ ^[Yy]$ ]]; then
     brew install -cask zoom
 fi
 
+echo "Successfully installed software."
 fastfetch
-
-sleep 5
-
-open -a "Amazon Q"
-open -a "Wipr"
+exit 0

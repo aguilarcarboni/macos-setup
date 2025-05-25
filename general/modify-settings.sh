@@ -1,14 +1,6 @@
 #!/bin/bash
 
 # This script is used to programatically set the settings for macOS.
-# WARNING: THIS IS A DESTRUCTIVE SCRIPT. IT WILL OVERWRITE THE USER'S EXISTING SETTINGS.
-
-# TODO:
-# Setup airplay reciever and handoff
-# Setup mouse wheel
-# Keyboard shortcuts
-# Safari settings
-# Mail settings
 
 set -e
 set -o pipefail
@@ -19,8 +11,23 @@ set -o pipefail
 
 echo "Personalizing MacOS..."
 
+# Get 'server' from positional arguments, or default to 'N'
+server="${1:-}"
+
+if [[ -z "$server" ]]; then
+    echo "Error: 'server' argument must be provided."
+    echo "Usage: $0 <server>"
+    exit 1
+fi
+
 # Create a symlink to the iCloud documents folder
-ln -s ~/Library/Mobile\ Documents/com~apple~CloudDocs ~/iCloud
+
+# Check if the ~/iCloud symlink already exists first, if it does dont create it
+if [ -L "~/iCloud" ]; then
+    echo "iCloud symlink already exists."
+else
+    ln -s ~/Library/Mobile\ Documents/com~apple~CloudDocs ~/iCloud
+fi
 
 # Close any open System Preferences panes
 osascript -e 'tell application "System Preferences" to quit'
@@ -42,12 +49,12 @@ cleanup() {
 # Register the cleanup function to run when the script exits
 trap cleanup EXIT
 
-# Reveal IP address, hostname, OS version, etc. when clicking the clock
-# in the login window
-sudo defaults write com.apple.loginwindow AdminHostInfo HostName
+################################################################################
+# General                                                                 
+################################################################################
 
-# Save to disk (not to iCloud) by default
-defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
+# Show hostname in login window
+defaults write com.apple.loginwindow AdminHostInfo HostName
 
 ################################################################################
 # System Settings > Wi-Fi                                                                 
@@ -85,7 +92,6 @@ sudo pmset -a powernap 0
 # Enable lid wake
 sudo pmset -a lidwake 1
 
-read -p "Is this a server? (Y/n): " server
 if [[ -z "${server}" || "${server}" =~ ^[Yy]$ ]]; then
 
     # Never sleep disks
@@ -190,6 +196,9 @@ defaults write NSGlobalDomain AppleShowScrollBars -string "WhenScrolling"
 # System Settings > Apple Intelligence & Siri
 ################################################################################
 
+# Enable Apple Intelligence & Siri
+defaults write com.apple.CloudSubscriptionFeatures.optIn "545129924" -bool true
+
 ################################################################################
 # System Settings > Control Center                                                                 
 ################################################################################
@@ -258,6 +267,10 @@ defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -bool tr
 defaults write com.apple.WindowManager EnableTilingByEdgeDrag -bool true
 defaults write com.apple.WindowManager EnableTilingOptionAccelerator -bool true
 defaults write com.apple.WindowManager EnableTopTilingByEdgeDrag -bool true
+
+if [[ -z "${server}" || "${server}" =~ ^[Nn]$ ]]; then
+    defaults write com.apple.dock "static-only" -bool true
+fi
 
 # Hot corners
 # Possible values:
@@ -359,6 +372,9 @@ defaults write com.apple.screensaver askForPasswordDelay -int 0
 # System Settings > iCloud                                                                 
 ################################################################################
 
+# Save to disk (not to iCloud) by default
+defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
+
 ################################################################################
 # System Settings > Wallet & Apple Pay
 ################################################################################
@@ -375,6 +391,9 @@ defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 
 # Disable smart dashes as they're annoying when typing code
 defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+
+# Show language indicator
+defaults write kCFPreferencesAnyApplication TSMLanguageIndicatorEnabled -bool true
 
 ################################################################################
 # System Settings > Trackpad                                                                 
@@ -404,31 +423,40 @@ defaults write NSGlobalDomain CGDisableCursorLocationMagnification -int 0
 ################################################################################
 
 ################################################################################
-# Additional Settings                                                                 
+# Screenshots                                                               
 ################################################################################
 
-# Screenshots
-mkdir -p ~/Pictures/Screenshots
-defaults write com.apple.screencapture location -string "~/Pictures/Screenshots"
+# Save screenshots to Desktop
+defaults write com.apple.screencapture location -string "~/Desktop"
+
+# Save screenshots as PNG
 defaults write com.apple.screencapture type -string "png"
+
+# Disable shadow
 defaults write com.apple.screencapture disable-shadow -bool false
+
+# Show thumbnail
+defaults write com.apple.screencapture "show-thumbnail" -bool "true"
 
 ################################################################################
 # Finder                                                                 
 ################################################################################
 
 # Finder > View > Show View Options > Show Path Bar
+defaults write com.apple.finder "ShowPathbar" -bool true
+
+# Finder > View > Show View Options > List View
 defaults write com.apple.finder "FXPreferredViewStyle" -string "clmv"
 
 # Finder > View > Show View Options > Show Status Bar
 defaults write com.apple.finder ShowStatusBar -bool false
 
-# Finder > View > Show View Options > Show Path Bar
-defaults write com.apple.finder ShowPathbar -bool true
-
 # Finder > New Window > Target > Desktop
 defaults write com.apple.finder NewWindowTarget -string "PfDe"
 defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/Desktop/"
+
+# Finder > Sort Folders First
+defaults write com.apple.finder "_FXSortFoldersFirst" -bool true
 
 # Finder > Show External Hard Drives On Desktop
 defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
@@ -445,7 +473,7 @@ defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
 # Finder > Show All Files
 defaults write com.apple.finder AppleShowAllFiles -bool false
 
-# Finder > Default Search Scope
+# Finder > Default Search Scope > Current Folder
 defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
 
 # Finder > Desktop Services > Don't Write Network Stores
@@ -529,6 +557,7 @@ defaults write com.apple.TextEdit RichText -int 0
 # QuickTime Player                                                                 
 ################################################################################
 
+#
 defaults write com.apple.QuickTimePlayerX MGPlayMovieOnOpen -bool true
 
 ################################################################################
@@ -538,25 +567,11 @@ defaults write com.apple.QuickTimePlayerX MGPlayMovieOnOpen -bool true
 # Disable playback notifications
 defaults write com.apple.Music "userWantsPlaybackNotifications" -bool "false"
 
-################################################################################
-# Manual settings                                                                  
-################################################################################
+echo "Successfully modified settings."
 
-# 
-sh settings/set-machine-name.sh
-sh settings/set-spoken-content.sh
-sh settings/set-shake-mouse.sh
-sh settings/set-nightshift.sh
-sh settings/set-wallpaper.sh
-sh settings/set-screensaver.sh
-sh settings/set-icloud.sh
-sh settings/set-wallet.sh
-sh settings/set-internet-accounts.sh
-
-# Privacy
-sh settings/set-advertising.sh
-sh settings/set-analytics.sh
-
-# Done
-echo "Done. Note that some of these changes require a logout/restart to take effect."
-exit 0
+# TODO:
+# Setup airplay reciever and handoff
+# Setup mouse wheel
+# Keyboard shortcuts
+# Safari settings
+# Mail settings

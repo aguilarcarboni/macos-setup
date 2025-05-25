@@ -82,4 +82,4 @@ cp ~/dotfiles/encrypted/.pypirc ~/
 # Remove dotfiles directory
 rm -rf ~/dotfiles
 
-echo "Done"
+echo "Successfully fetched dotfiles."

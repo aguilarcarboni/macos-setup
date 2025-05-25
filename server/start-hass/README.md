@@ -1,0 +1,1 @@
+This folder contains all files necesary to start the Home Assistant VM and schedule it to start at login.
