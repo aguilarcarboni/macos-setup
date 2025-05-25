@@ -109,13 +109,13 @@ fi
 brew install mas
 
 # ChatGPT
-#brew install --cask chatgpt
+brew install --cask chatgpt
 
 # Notion
-#brew install --cask notion
+brew install --cask notion
 
 # Obsidian
-#brew install --cask obsidian
+brew install --cask obsidian
 
 # Collections
 mas install 1568395334
