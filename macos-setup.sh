@@ -2,9 +2,12 @@
 
 # This script is used to setup a new macOS machine.
 
-# Print the line and command on error
 set -e
 set -o pipefail
+
+###############################################################################
+# Ask type of machine
+###############################################################################
 
 read -p "Is this a server? (Y/n): " server
 if [[ -z "${server}" || "${server}" =~ ^[Nn]$ ]]; then
