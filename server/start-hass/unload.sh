@@ -14,7 +14,7 @@ launchctl unload ~/Library/LaunchAgents/com.user.starthass.plist
 rm ~/Library/LaunchAgents/com.user.starthass.plist
 
 # Remove the script
-rm ~/Developer/Scripts/start-hass/start-hass.sh
+rm -rf ~/Developer/Scripts/start-hass
 
 # Check if the launch agent is loaded
 launchctl list | grep starthass
