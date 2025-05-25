@@ -95,12 +95,9 @@ fi
 
 read -p "Do you want to generate an SSH key for Github? (Y/n): " ssh_key
 if [[ -z "${ssh_key}" || "${ssh_key}" =~ ^[Yy]$ ]]; then
-    echo "Generating SSH key for Github. Save it in the default location."
     ssh-keygen -t ecdsa -b 521 -C "aguilarcarboni@gmail.com"
     cat ~/.ssh/id_ecdsa.pub
     read -sp "Please make sure you have copied this SSH key and will add it to Github." key_confirmation
-
-    echo "\nCreating SSH agent to store keychain."
     eval "$(ssh-agent -s)"
     ssh-add --apple-use-keychain ~/.ssh/id_ecdsa
 fi
@@ -108,8 +105,6 @@ fi
 ###############################################################################
 # Install Essential Applications
 ###############################################################################
-
-echo "Installing essential apps..."
 
 brew install mas
 
@@ -137,8 +132,6 @@ brew install --cask amazon-q
 ###############################################################################
 # Install Optional Applications
 ###############################################################################
-
-echo "Installing optional apps..."
 
 # Smart Comic
 read -p "Do you want to install Smart Comic? (Y/n): " simple_comic
@@ -179,8 +172,6 @@ fi
 
 if [[ -z "${developer}" || "${developer}" =~ ^[Yy]$ ]]; then
 
-    echo "Installing essential developer tools..."
-
     # Watchman
     brew install watchman
 
@@ -205,8 +196,6 @@ fi
 ###############################################################################
 
 if [[ -z "${developer}" || "${developer}" =~ ^[Yy]$ ]]; then
-
-    echo "Installing optional developer apps..."
 
     # ollama
     read -p "Install ollama? (Y/n): " ollama

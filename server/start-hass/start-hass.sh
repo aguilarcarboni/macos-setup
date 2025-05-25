@@ -23,4 +23,4 @@ if ! /Applications/VirtualBox.app/Contents/MacOS/VBoxManage list runningvms | gr
     /Applications/VirtualBox.app/Contents/MacOS/VBoxManage startvm "Home Assistant" --type gui
 fi
 
-echo "Successfully started."
+echo "Successfully started Home Assistant."

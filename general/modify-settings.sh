@@ -268,7 +268,7 @@ defaults write com.apple.WindowManager EnableTilingByEdgeDrag -bool true
 defaults write com.apple.WindowManager EnableTilingOptionAccelerator -bool true
 defaults write com.apple.WindowManager EnableTopTilingByEdgeDrag -bool true
 
-if [[ -z "${server}" || "${server}" =~ ^[Nn]$ ]]; then
+if [[ -z "${server}" || "${server}" =~ ^[Yy]$ ]]; then
     defaults write com.apple.dock "static-only" -bool true
 fi
 
