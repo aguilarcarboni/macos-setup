@@ -41,9 +41,10 @@ if [[ -z "${server}" || "${server}" =~ ^[Yy]$ ]]; then
     # Install VirtualBox
     brew install --cask virtualbox
 
-    # Make Virtual Machines directories
-    mkdir -p ~/Virtual\ Machines/Disk\ Images
-    mkdir -p ~/Virtual\ Machines/Home\ Assistant
+    # Make Developer directories
+    mkdir -p ~/Developer/Virtual\ Machines/Disk\ Images
+    mkdir -p ~/Developer/Virtual\ Machines/Home\ Assistant
+    mkdir -p ~/Developer/Scripts
 
     # TODO: Install Home Assistant
     
@@ -191,11 +192,10 @@ if [[ -z "${developer}" || "${developer}" =~ ^[Yy]$ ]]; then
     # Select Xcode Version
     sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
     
-    # Make Repositories directory
+    # Make Developer directories
     mkdir -p ~/Developer/Repositories
-
-    # Make Virtual Machines directory
-    mkdir -p ~/Developer/Virtual\ Machines
+    mkdir -p ~/Developer/Virtual\ Machines/Disk\ Images
+    mkdir -p ~/Developer/Scripts
     
 fi
 

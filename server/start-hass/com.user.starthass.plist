@@ -7,7 +7,7 @@
     <key>ProgramArguments</key>
     <array>
         <string>/bin/bash</string>
-        <string>/Users/aguilarcarboni/Library/Mobile Documents/com~apple~CloudDocs/Personal/Developer/Repositories/macos-setup/start-hass/start-hass.sh</string>
+        <string>/Users/aguilarcarboni/Developer/Scripts/start-hass/start-hass.sh</string>
     </array>
     <key>ProcessType</key>
     <string>Interactive</string>
@@ -16,8 +16,8 @@
     <key>RunAtLoad</key>
     <true/>
     <key>StandardOutPath</key>
-    <string>/Users/aguilarcarboni/Library/Mobile Documents/com~apple~CloudDocs/Personal/Developer/Repositories/macos-setup/start-hass/start-hass.log</string>
+    <string>/Users/aguilarcarboni/Developer/Scripts/start-hass/start-hass.log</string>
     <key>StandardErrorPath</key>
-    <string>/Users/aguilarcarboni/Library/Mobile Documents/com~apple~CloudDocs/Personal/Developer/Repositories/macos-setup/start-hass/start-hass.log</string>
+    <string>/Users/aguilarcarboni/Developer/Scripts/start-hass/start-hass.log</string>
 </dict>
 </plist>
