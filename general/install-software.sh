@@ -60,18 +60,24 @@ pyenv global 3.11.9
 # Install developer packages
 if [[ -z "${developer}" || "${developer}" =~ ^[Yy]$ ]]; then
 
+    # Make Developer directories
+    mkdir -p ~/Developer/Repositories
+    mkdir -p ~/Developer/Virtual\ Machines/Disk\ Images
+    mkdir -p ~/Developer/Scripts
+
+    # Install Google Cloud SDK
     brew install google-cloud-sdk
     
-    # Download and install nvm:
+    # Download and install nvm
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
 
     # in lieu of restarting the shell
     \. "$HOME/.nvm/nvm.sh"
 
-    # Download and install Node.js:
+    # Download and install Node.js
     nvm install 22
 
-    # Verify the Node.js version:
+    # Verify the Node.js version
     node -v
     nvm current
     npm -v
@@ -106,6 +112,7 @@ fi
 # Install Essential Applications
 ###############################################################################
 
+# Install mas
 brew install mas
 
 # ChatGPT
@@ -184,11 +191,6 @@ if [[ -z "${developer}" || "${developer}" =~ ^[Yy]$ ]]; then
     # Select Xcode Version
     sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
     
-    # Make Developer directories
-    mkdir -p ~/Developer/Repositories
-    mkdir -p ~/Developer/Virtual\ Machines/Disk\ Images
-    mkdir -p ~/Developer/Scripts
-    
 fi
 
 ###############################################################################
@@ -227,28 +229,6 @@ if [[ -z "${developer}" || "${developer}" =~ ^[Yy]$ ]]; then
         brew install --cask sf-symbols
     fi
 
-fi
-
-###############################################################################
-# Install Work Tools
-###############################################################################
-
-# Chrome
-read -p "Do you want to install Chrome? (Y/n): " chrome
-if [[ -z "${chrome}" || "${chrome}" =~ ^[Yy]$ ]]; then
-    brew install --cask google-chrome
-fi
-
-# Postman
-read -p "Do you want to install Postman? (Y/n): " postman
-if [[ -z "${postman}" || "${postman}" =~ ^[Yy]$ ]]; then
-    brew install --cask postman
-fi
-
-# Zoom
-read -p "Do you want to install Zoom? (Y/n): " zoom
-if [[ -z "${zoom}" || "${zoom}" =~ ^[Yy]$ ]]; then
-    brew install -cask zoom
 fi
 
 echo "Successfully installed software."
