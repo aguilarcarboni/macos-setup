@@ -9,7 +9,7 @@ set -o pipefail
 # Script Setup                                                                 
 ################################################################################
 
-echo "Personalizing MacOS..."
+echo "Modifying MacOS settings..."
 
 # Get 'server' from positional arguments, or default to 'N'
 server="${1:-}"
@@ -567,7 +567,8 @@ defaults write com.apple.QuickTimePlayerX MGPlayMovieOnOpen -bool true
 # Disable playback notifications
 defaults write com.apple.Music "userWantsPlaybackNotifications" -bool "false"
 
-echo "Successfully modified settings."
+echo "Successfully modified macOS settings."
+exit 0
 
 # TODO:
 # Setup airplay reciever and handoff

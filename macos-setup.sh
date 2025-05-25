@@ -51,4 +51,5 @@ if [[ -z "${server}" || "${server}" =~ ^[Yy]$ ]]; then
     sh server/setup-hass.sh
 fi
 
+fastfetch
 exit 0

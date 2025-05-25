@@ -5,12 +5,6 @@
 set -e
 set -o pipefail
 
-###############################################################################
-# Install Essential Software
-###############################################################################
-
-echo "Installing essential software..."
-
 # Get 'server' and 'developer' from positional arguments, or default to null
 server="${1:-}"
 developer="${2:-}"
@@ -20,6 +14,12 @@ if [[ -z "$server" || -z "$developer" ]]; then
     echo "Usage: $0 <server> <developer>"
     exit 1
 fi
+
+###############################################################################
+# Install Essential Software
+###############################################################################
+
+echo "Installing essential software..."
 
 # Download Xcode CLI tools
 if ! xcode-select -p &> /dev/null; then
@@ -36,6 +36,7 @@ brew upgrade
 # Install essential packages
 brew install git btop nmap cmatrix fastfetch neovim gnupg
 
+# Install server packages
 if [[ -z "${server}" || "${server}" =~ ^[Yy]$ ]]; then
 
     # Install VirtualBox
@@ -56,7 +57,7 @@ brew install pyenv pyenv-virtualenv
 pyenv install --skip-existing 3.11.9
 pyenv global 3.11.9
 
-# Install developer packages if install is for a developer
+# Install developer packages
 if [[ -z "${developer}" || "${developer}" =~ ^[Yy]$ ]]; then
 
     brew install google-cloud-sdk
@@ -262,5 +263,4 @@ if [[ -z "${zoom}" || "${zoom}" =~ ^[Yy]$ ]]; then
 fi
 
 echo "Successfully installed software."
-fastfetch
 exit 0

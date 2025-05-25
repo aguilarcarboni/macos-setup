@@ -53,4 +53,5 @@ for tab in "${settings_tabs[@]}"; do
 
 done
 
+echo "Successfully ensured settings are correct."
 exit 0
