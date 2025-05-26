@@ -12,39 +12,46 @@ set -o pipefail
 echo "Ensuring settings are correct..."
 
 # Create Dialog
-appIcon="/Applications/System Preferences.app/Contents/Resources/ScreenCapture.icns"
-dialogTitle="Settings"
+fullPath="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+appIcon="/Users/aguilarcarboni/Library/Mobile Documents/com~apple~CloudDocs/Personal/Developer/Repositories/macos-setup/dialog/settings.icns"
+dialogTitle="System Settings"
 
 # Source the reusable UserDialog functions
 source "/Users/aguilarcarboni/Library/Mobile Documents/com~apple~CloudDocs/Personal/Developer/Repositories/macos-setup/dialog/user-dialog.sh"
 
-# Note: Remove trailing commas from each URL. Some URLs may not work on all macOS versions (especially Ventura and newer).
+# Settings Tabs
 settings_tabs=(
-    x-apple.systempreferences:com.apple.SystemProfiler.AboutExtension
-    x-apple.systempreferences:com.apple.preference.universalaccess?SpokenContent
-    x-apple.systempreferences:com.apple.preference.universalaccess?Seeing_Display
-    x-apple.systempreferences:com.apple.ControlCenter-Settings.extension
-    x-apple.systempreferences:com.apple.Displays-Settings.extension
-    x-apple.systempreferences:com.apple.Wallpaper-Settings.extension
-    x-apple.systempreferences:com.apple.Lock-Screen-Settings.extension
-    x-apple.systempreferences:com.apple.preferences.AppleIDPrefPane?iCloud
-    x-apple.systempreferences:com.apple.WalletSettingsExtension
-    x-apple.systempreferences:com.apple.Internet-Accounts-Settings.extension
-    x-apple.systempreferences:com.apple.preference.security?Privacy_Advertising
-    x-apple.systempreferences:com.apple.preference.security?Privacy_Analytics
+    "Hostname ## x-apple.systempreferences:com.apple.SystemProfiler.AboutExtension"
+    "Spoken Content ## x-apple.systempreferences:com.apple.preference.universalaccess?SpokenContent"
+    "Display Accessibility ## x-apple.systempreferences:com.apple.preference.universalaccess?Seeing_Display"
+    "Control Center ## x-apple.systempreferences:com.apple.ControlCenter-Settings.extension"
+    "Displays ## x-apple.systempreferences:com.apple.Displays-Settings.extension"
+    "Wallpaper ## x-apple.systempreferences:com.apple.Wallpaper-Settings.extension"
+    "Lock Screen ## x-apple.systempreferences:com.apple.Lock-Screen-Settings.extension"
+    "Apple ID (iCloud) ## x-apple.systempreferences:com.apple.preferences.AppleIDPrefPane?iCloud"
+    "Wallet ## x-apple.systempreferences:com.apple.WalletSettingsExtension"
+    "Internet Accounts ## x-apple.systempreferences:com.apple.Internet-Accounts-Settings.extension"
+    "Privacy - Advertising ## x-apple.systempreferences:com.apple.preference.security?Privacy_Advertising"
+    "Privacy - Analytics ## x-apple.systempreferences:com.apple.preference.security?Privacy_Analytics"
 )
 
 # Open settings tabs
 for tab in "${settings_tabs[@]}"; do
+    # Split on '##' to get label and URL
+    tabLabel="${tab%%##*}"
+    tabUrl="${tab#*##}"
+    # Trim whitespace
+    tabLabel="$(echo "$tabLabel" | xargs)"
+    tabUrl="$(echo "$tabUrl" | xargs)"
 
-    # Get the dialog message from the tab name
-    dialogMessage="Set your ${tab##*?} settings."
+    # Set dialog message
+    dialogMessage="Please ensure your $tabLabel settings are correct."
 
     # Show the dialog
     show_user_dialog "$dialogTitle" "$dialogMessage" "$appIcon"
 
     # Open the settings tab
-    open "$tab"
+    open "$tabUrl"
 
     # Wait for System Settings (Ventura+) or System Preferences (Monterey and earlier) to close
     while pgrep -x "System Settings" > /dev/null || pgrep -x "System Preferences" > /dev/null; do

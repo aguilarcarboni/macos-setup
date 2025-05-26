@@ -2,6 +2,13 @@
 
 # This script is used to programatically set the settings for macOS.
 
+# TODO:
+# Setup airplay reciever and handoff
+# Setup mouse wheel
+# Keyboard shortcuts
+# Safari settings
+# Mail settings
+
 set -e
 set -o pipefail
 
@@ -616,10 +623,3 @@ defaults write com.apple.Music "userWantsPlaybackNotifications" -bool "false"
 
 echo "Successfully modified macOS settings."
 exit 0
-
-# TODO:
-# Setup airplay reciever and handoff
-# Setup mouse wheel
-# Keyboard shortcuts
-# Safari settings
-# Mail settings

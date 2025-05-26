@@ -5,6 +5,7 @@
 # Show a dialog with a message, title, and optional icon
 # Usage: show_user_dialog "Title" "Message" ["/path/to/icon.icns"]
 show_user_dialog() {
+  
   local title="$1"
   local message="$2"
   local icon="$3"

@@ -18,9 +18,12 @@ sleep 5
 # Close VirtualBox Manager GUI to avoid keeping it open
 pkill -x VirtualBox
 
+VBOXMANAGE="/Applications/VirtualBox.app/Contents/MacOS/VBoxManage"
+VM_NAME="Home Assistant"
+
 # Check if the VM "Home Assistant" is already running
-if ! /Applications/VirtualBox.app/Contents/MacOS/VBoxManage list runningvms | grep -q "\"Home Assistant\""; then
-    /Applications/VirtualBox.app/Contents/MacOS/VBoxManage startvm "Home Assistant" --type gui
+if ! "$VBOXMANAGE" list runningvms | grep -q "\"$VM_NAME\""; then
+    "$VBOXMANAGE" startvm "$VM_NAME" --type gui
 fi
 
 echo "Successfully started Home Assistant."

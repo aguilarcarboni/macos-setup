@@ -39,12 +39,8 @@ if [[ -z "${server}" || "${server}" =~ ^[Yy]$ ]]; then
     # Install VirtualBox
     brew install --cask virtualbox
 
-    # Make Developer directories
-    mkdir -p ~/Developer/Virtual\ Machines/Disk\ Images
-    mkdir -p ~/Developer/Virtual\ Machines/Home\ Assistant
-    mkdir -p ~/Developer/Scripts
-
-    # TODO: Install Home Assistant
+    # Install Home Assistant Disk Image
+    sh server/install-hass.sh
     
     exit 0
 fi
@@ -60,7 +56,7 @@ pyenv global 3.11.9
 # Install developer packages
 if [[ -z "${developer}" || "${developer}" =~ ^[Yy]$ ]]; then
 
-    # Make Developer directories
+    # Create Developer directories
     mkdir -p ~/Developer/Repositories
     mkdir -p ~/Developer/Virtual\ Machines/Disk\ Images
     mkdir -p ~/Developer/Scripts
