@@ -118,7 +118,7 @@ else
     sudo pmset -a autorestart 0
 
     # Keep tcp connections alive
-    sudo pmset -a tcpkeepalive 0
+    sudo pmset -a tcpkeepalive 1
     
     # Wake on Magic Packet from LAN
     sudo pmset -a womp 0
