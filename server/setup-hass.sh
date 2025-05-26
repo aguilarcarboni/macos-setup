@@ -19,7 +19,7 @@ echo "Setting up Home Assistant VM..."
 
 # Load the launch agent
 # TODO: Currently, this is saved to the /Developer/Scripts directory, but it should be gotten from iCloud. Upgrade hardware.
-sh start-hass/load.sh
+sh ./start-hass/load.sh
 
 echo "Successfully setup Home Assistant VM."
 exit 0
