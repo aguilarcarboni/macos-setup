@@ -166,11 +166,15 @@ if [[ -z "${server}" || "${server}" =~ ^[Yy]$ ]]; then
     sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist
 
     # Enable File Sharing
+    if sudo launchctl list | grep -q "com.apple.AppleFileServer"; then
+        sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.AppleFileServer.plist
+    fi
     sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.AppleFileServer.plist
-    sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.AppleFileServer.plist
 
+    if sudo launchctl list | grep -q "com.apple.smbd"; then
+        sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.smbd.plist
+    fi
     sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.smbd.plist
-    sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.smbd.plist
 fi
 
 ################################################################################
