@@ -111,11 +111,20 @@ if [[ -z "${server}" || "${server}" =~ ^[Yy]$ ]]; then
 
 else
 
-    # Sleep disks after 30 minutes
+    # Never sleep disks
     sudo pmset -a disksleep 30
 
     # Set auto restart on power loss
     sudo pmset -a autorestart 0
+
+    # Keep tcp connections alive
+    sudo pmset -a tcpkeepalive 0
+    
+    # Wake on Magic Packet from LAN
+    sudo pmset -a womp 0
+
+    # Wake on Ring/Bell from Modem
+    sudo pmset -a ring 0
 
 fi
 
@@ -150,30 +159,39 @@ defaults write NSGlobalDomain AppleICUDateFormatStrings -dict-add 1 "d/M/y"
 # System Settings > General >Sharing
 ################################################################################
 
+# Disable Screen Sharing
+if sudo launchctl list | grep -q "com.apple.screensharing"; then
+    sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.screensharing.plist
+fi
+
+# Disable Remote Login
+if sudo launchctl list | grep -q "com.openssh.sshd"; then
+    sudo launchctl unload -w /System/Library/LaunchDaemons/ssh.plist
+fi
+
+# Disable File Sharing
+if sudo launchctl list | grep -q "com.apple.AppleFileServer"; then
+    sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.AppleFileServer.plist
+fi
+
+# Disable SMB
+if sudo launchctl list | grep -q "com.apple.smbd"; then
+    sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.smbd.plist
+fi
+
 if [[ -z "${server}" || "${server}" =~ ^[Yy]$ ]]; then
 
     # Enable Screen Sharing
     sudo defaults write /var/db/launchd.db/com.apple.launchd/overrides.plist com.apple.screensharing -dict Disabled -bool false
-    if sudo launchctl list | grep -q "com.apple.screensharing"; then
-        sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.screensharing.plist
-    fi
     sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.screensharing.plist
 
     # Enable Remote Login
-    if sudo launchctl list | grep -q "com.openssh.sshd"; then
-        sudo launchctl unload -w /System/Library/LaunchDaemons/ssh.plist
-    fi
     sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist
 
     # Enable File Sharing
-    if sudo launchctl list | grep -q "com.apple.AppleFileServer"; then
-        sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.AppleFileServer.plist
-    fi
     sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.AppleFileServer.plist
 
-    if sudo launchctl list | grep -q "com.apple.smbd"; then
-        sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.smbd.plist
-    fi
+    # Enable SMB
     sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.smbd.plist
 fi
 
@@ -283,6 +301,8 @@ defaults write com.apple.WindowManager EnableTopTilingByEdgeDrag -bool true
 
 if [[ -z "${server}" || "${server}" =~ ^[Yy]$ ]]; then
     defaults write com.apple.dock "static-only" -bool true
+else
+    defaults write com.apple.dock "static-only" -bool false
 fi
 
 # Hot corners
