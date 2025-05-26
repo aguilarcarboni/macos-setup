@@ -268,6 +268,9 @@ defaults write com.apple.dock autohide-delay -float 0
 # Show recent applications in Dock
 defaults write com.apple.dock "show-recents" -bool false
 
+# Show indicator lights for open applications in the Dock
+defaults write com.apple.dock show-process-indicators -bool true
+
 # Desktop & Stage Manager > Click Wallpaper to reveal desktop > Yes
 defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -bool true
 defaults write com.apple.WindowManager EnableTilingByEdgeDrag -bool true
@@ -448,6 +451,9 @@ defaults write com.apple.screencapture "show-thumbnail" -bool "true"
 # Finder                                                                 
 ################################################################################
 
+# Show the ~/Library folder
+chflags nohidden ~/Library
+
 # Finder > View > Show View Options > Show Path Bar
 defaults write com.apple.finder "ShowPathbar" -bool true
 
@@ -499,6 +505,11 @@ defaults write com.apple.finder SidebarShowingSignedIntoiCloud -int 1
 defaults write com.apple.finder SidebarShowingiCloudDesktop -int 0
 defaults write com.apple.finder SidebariCloudDriveSectionDisclosedState -int 1
 
+# Automatically open a new Finder window when a volume is mounted
+defaults write com.apple.frameworks.diskimages auto-open-ro-root -bool true
+defaults write com.apple.frameworks.diskimages auto-open-rw-root -bool true
+defaults write com.apple.finder OpenWindowForNewRemovableDisk -bool true
+
 # Set Finder keyboard shortcut to open new terminal at folder using CMD + Shift + T
 defaults write com.apple.finder NSUserKeyEquivalents -dict-add "New Terminal at Folder" "@\$t"
 
@@ -516,8 +527,14 @@ defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
 # App Store
 defaults write com.apple.appstore WebKitDeveloperExtras -bool true
 defaults write com.apple.appstore ShowDebugMenu -bool true
+
+# Set App Store to automatically check for updates
 defaults write com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
+
+# Set App Store to automatically download updates on a daily basis
 defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
+
+# Set App Store to automatically download updates in the background
 defaults write com.apple.SoftwareUpdate AutomaticDownload -int 1
 
 # Enable Auto Update
