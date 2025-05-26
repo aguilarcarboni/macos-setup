@@ -39,7 +39,7 @@ echo "Setting up Home Assistant VM..."
 VBOXMANAGE="/Applications/VirtualBox.app/Contents/MacOS/VBoxManage"
 VM_NAME="Home Assistant"
 VDI_PATH="$HOME/Developer/Virtual Machines/Disk Images/haos_ova-$VERSION.vdi"
-VM_PATH="$HOME/Developer/Virtual Machines/Home Assistant"
+VM_PATH="$HOME/Developer/Virtual Machines"
 
 # Check if the VM already exists
 if ! "$VBOXMANAGE" list vms | grep -q "\"$VM_NAME\""; then
