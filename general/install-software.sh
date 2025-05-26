@@ -33,9 +33,6 @@ fi
 brew update
 brew upgrade
 
-# Install essential packages
-brew install git btop nmap cmatrix fastfetch neovim gnupg
-
 # Install server packages
 if [[ -z "${server}" || "${server}" =~ ^[Yy]$ ]]; then
 
@@ -51,6 +48,9 @@ if [[ -z "${server}" || "${server}" =~ ^[Yy]$ ]]; then
     
     exit 0
 fi
+
+# Install essential packages
+brew install git gnupg btop nmap cmatrix fastfetch neovim
 
 # Install Python
 brew install pyenv pyenv-virtualenv

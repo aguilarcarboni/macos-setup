@@ -54,7 +54,7 @@ trap cleanup EXIT
 ################################################################################
 
 # Show hostname in login window
-defaults write com.apple.loginwindow AdminHostInfo HostName
+sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
 
 ################################################################################
 # System Settings > Wi-Fi                                                                 
@@ -150,22 +150,28 @@ defaults write NSGlobalDomain AppleICUDateFormatStrings -dict-add 1 "d/M/y"
 # System Settings > General >Sharing
 ################################################################################
 
-# Enable Screen Sharing
 if [[ -z "${server}" || "${server}" =~ ^[Yy]$ ]]; then
+
+    # Enable Screen Sharing
     sudo defaults write /var/db/launchd.db/com.apple.launchd/overrides.plist com.apple.screensharing -dict Disabled -bool false
     if sudo launchctl list | grep -q "com.apple.screensharing"; then
         sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.screensharing.plist
     fi
     sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.screensharing.plist
-fi
 
-# Enable Remote Login
-if sudo launchctl list | grep -q "com.openssh.sshd"; then
-    sudo launchctl unload -w /System/Library/LaunchDaemons/ssh.plist
-fi
+    # Enable Remote Login
+    if sudo launchctl list | grep -q "com.openssh.sshd"; then
+        sudo launchctl unload -w /System/Library/LaunchDaemons/ssh.plist
+    fi
+    sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist
 
-# Start the SSH daemon
-sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist
+    # Enable File Sharing
+    sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.AppleFileServer.plist
+    sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.AppleFileServer.plist
+
+    sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.smbd.plist
+    sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.smbd.plist
+fi
 
 ################################################################################
 # System Settings > Accessibility                                                                 
