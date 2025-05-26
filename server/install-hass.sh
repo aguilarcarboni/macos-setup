@@ -39,6 +39,7 @@ echo "Setting up Home Assistant VM..."
 VBOXMANAGE="/Applications/VirtualBox.app/Contents/MacOS/VBoxManage"
 VM_NAME="Home Assistant"
 VDI_PATH="$HOME/Developer/Virtual Machines/Disk Images/haos_ova-$VERSION.vdi"
+VM_PATH="$HOME/Developer/Virtual Machines/Home Assistant"
 
 # Check if the VM already exists
 if ! "$VBOXMANAGE" list vms | grep -q "\"$VM_NAME\""; then
@@ -48,14 +49,14 @@ if ! "$VBOXMANAGE" list vms | grep -q "\"$VM_NAME\""; then
     "$VBOXMANAGE" modifyvm "$VM_NAME" --memory 2048 --cpus 2 --firmware efi
     # Set network to bridged (default to en0:Wi-Fi, change if needed)
     "$VBOXMANAGE" modifyvm "$VM_NAME" --nic1 bridged --bridgeadapter1 en0
-    # Set audio to Intel HD Audio
-    "$VBOXMANAGE" modifyvm "$VM_NAME" --audio hda
     # Create SATA controller
     "$VBOXMANAGE" storagectl "$VM_NAME" --name "SATA" --add sata --controller IntelAhci
     # Attach the VDI disk
     "$VBOXMANAGE" storageattach "$VM_NAME" --storagectl "SATA" --port 0 --device 0 --type hdd --medium "$VDI_PATH"
     # Enable discard/trim and non-rotational (SSD)
     "$VBOXMANAGE" storageattach "$VM_NAME" --storagectl "SATA" --port 0 --device 0 --nonrotational on --discard on
+    # Save the vm to the vm path
+    "$VBOXMANAGE" showvminfo "$VM_NAME" > "$VM_PATH/$VM_NAME.vbox"
 else
     echo "VM '$VM_NAME' already exists. Skipping creation."
 fi
@@ -66,7 +67,8 @@ fi
 
 # Load the launch agent
 # TODO: Currently, this is saved to the /Developer/Scripts directory, but it should be gotten from iCloud. Upgrade hardware.
-sh ./start-hass/load.sh
+cd start-hass
+sh load.sh
 
 echo "Successfully installed Home Assistant VM."
 

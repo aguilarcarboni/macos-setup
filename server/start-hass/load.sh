@@ -17,6 +17,10 @@ cp start-hass.sh ~/Developer/Scripts/start-hass/
 cp com.user.starthass.plist ~/Library/LaunchAgents
 
 # Load the launch agent
+if launchctl list | grep -q "com.user.starthass"; then
+    launchctl unload ~/Library/LaunchAgents/com.user.starthass.plist
+fi
+
 launchctl load ~/Library/LaunchAgents/com.user.starthass.plist
 
 # Check if the launch agent is loaded
