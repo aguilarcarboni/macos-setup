@@ -312,6 +312,11 @@ else
     defaults write com.apple.dock "static-only" -bool false
 fi
 
+# Add iOS, Watch and CarPlay Simulator to Launchpad
+sudo ln -sf "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app" "/Applications/Simulator.app"
+sudo ln -sf "/Applications/Xcode.app/Contents/Developer/Applications/Simulator (Watch).app" "/Applications/Simulator (Watch).app"
+sudo ln -sf "/Applications/Xcode.app/Contents/Developer/Applications/Simulator (CarPlay).app" "/Applications/Simulator (CarPlay).app"
+
 # Hot corners
 # Possible values:
 #  0: no-op
