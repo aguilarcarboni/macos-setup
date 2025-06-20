@@ -49,9 +49,6 @@ cp -r ~/dotfiles/.ssh ~/
 # Copy .gitconfig to home directory
 cp ~/dotfiles/.gitconfig ~/
 
-# Copy .git-credentials to home directory
-cp ~/dotfiles/encrypted/.git-credentials ~/
-
 ###############################################################################
 # Shell
 ###############################################################################
