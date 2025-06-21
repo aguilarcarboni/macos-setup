@@ -148,12 +148,6 @@ if [[ -z "${swiptv}" || "${swiptv}" =~ ^[Yy]$ ]]; then
     mas install 1658538188
 fi
 
-# Figma
-read -p "Do you want to install Figma? (Y/n): " figma
-if [[ -z "${figma}" || "${figma}" =~ ^[Yy]$ ]]; then
-    brew install --cask figma
-fi
-
 # Office tools
 read -p "Do you want to install Office tools? (Y/n): " office_tools
 if [[ -z "${office_tools}" || "${office_tools}" =~ ^[Yy]$ ]]; then

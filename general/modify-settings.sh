@@ -27,15 +27,6 @@ if [[ -z "$server" ]]; then
     exit 1
 fi
 
-# Create a symlink to the iCloud documents folder
-
-# Check if the ~/iCloud symlink already exists first, if it does dont create it
-if [ -L "~/iCloud" ]; then
-    echo "iCloud symlink already exists."
-else
-    ln -s ~/Library/Mobile\ Documents/com~apple~CloudDocs ~/iCloud
-fi
-
 # Close any open System Preferences panes
 osascript -e 'tell application "System Preferences" to quit'
 
@@ -311,11 +302,6 @@ if [[ -z "${server}" || "${server}" =~ ^[Yy]$ ]]; then
 else
     defaults write com.apple.dock "static-only" -bool false
 fi
-
-# Add iOS, Watch and CarPlay Simulator to Launchpad
-sudo ln -sf "/Applications/Xcode.app/Contents/Developer/Applications/Simulator.app" "/Applications/Simulator.app"
-sudo ln -sf "/Applications/Xcode.app/Contents/Developer/Applications/Simulator (Watch).app" "/Applications/Simulator (Watch).app"
-sudo ln -sf "/Applications/Xcode.app/Contents/Developer/Applications/Simulator (CarPlay).app" "/Applications/Simulator (CarPlay).app"
 
 # Hot corners
 # Possible values:
