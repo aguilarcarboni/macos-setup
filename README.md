@@ -1,168 +1,168 @@
-# macOS Setup Automation
+# macOS Settings Automation
 
-## Personal macOS setup automation script that configures my new machines
+## Automated macOS System Configuration Scripts
 
 ### Description
 
-This is my personal macOS setup automation script that I use to configure new machines exactly how I like them. It installs all the software I need, configures my preferred system settings, and sets up my development environment automatically.
+This repository contains two powerful scripts designed to automate and verify macOS system settings configuration. These scripts help you quickly set up a new Mac or standardize settings across multiple machines with consistent, reproducible results.
 
-**Note**: This main branch contains my personal setup with all my specific preferences, applications, and configurations. If you're looking for a more generic setup script that you can easily customize for your own needs, check out the `general` branch which provides a more universal approach.
+### Scripts Overview
 
-This script supports both my regular developer machines and my home server setup, with special provisions for my Home Assistant server configuration.
+#### 🔧 `modify-settings.sh`
+Programmatically configures macOS system settings using command-line tools and defaults commands. This script eliminates the need to manually click through System Settings by automating the configuration process.
+
+#### ✅ `ensure-setings.sh`
+Provides an interactive way to verify that critical settings are properly configured by opening specific System Settings panels with user-friendly dialogs to guide you through manual verification.
 
 ### Features
 
-#### 🖥️ Machine Types
-- **Developer Machine**: My full development environment with all the IDEs, programming languages, and tools I use
-- **Server Machine**: Optimized for my home server with Home Assistant VM setup and minimal GUI applications
-- **Regular Machine**: My standard user setup with all the essential applications I use daily
-
-#### 🔧 System Configuration
-- **Power Management**: Optimized sleep and power settings based on machine type
+#### System Configuration (`modify-settings.sh`)
+- **Power Management**: Optimized sleep and power settings for different machine types
 - **Sharing Services**: Configurable screen sharing, SSH, and file sharing
 - **Regional Settings**: Language, measurement units, date/time formats
-- **Security Settings**: SSH key generation and GPG setup
+- **Appearance**: Dark mode, accent colors, sidebar sizes, scroll bar behavior
+- **Control Center**: Menu bar item configuration and preferences
+- **Desktop & Dock**: Size, magnification, auto-hide, hot corners
+- **Finder**: View options, sidebar settings, default behaviors
+- **Security**: Password requirements, screen saver settings
+- **Trackpad**: Tap to click, gestures, corner clicking
+- **Screenshots**: Location, format, and thumbnail settings
+- **App Store**: Auto-update configuration
 
-#### 📱 Software Installation
-- **Essential Applications**: ChatGPT, Notion, Obsidian, WhatsApp, Collections, Wipr, Amazon Q
-- **Developer Tools**: Xcode, Windsurf IDE, Docker, Ollama, Watchman
-- **Development Environment**: Python (via pyenv), Node.js (via nvm), Git, Google Cloud SDK
-- **Command Line Tools**: btop, nmap, cmatrix, fastfetch, neovim
-
-#### 🏠 Home Assistant Server Setup
-- Downloads and configures Home Assistant OS virtual machine
-- Sets up VirtualBox with optimized VM settings
-- Creates launch agents for automatic startup
-- Configures network bridging for VM accessibility
-
-#### 📄 Dotfiles Management
-- Clones personal dotfiles from GitHub repository
-- Decrypts and installs encrypted configuration files
-- Sets up shell configurations (zsh, bash)
-- Configures Git, SSH, GPG, and PyPI settings
+#### Settings Verification (`ensure-setings.sh`)
+- **Interactive Dialogs**: User-friendly prompts for each settings category
+- **Automated Opening**: Directly opens relevant System Settings panels
+- **Comprehensive Coverage**: Covers accessibility, privacy, display, and account settings
+- **Progress Tracking**: Waits for user completion before moving to next section
 
 ### Usage
 
-**Important**: This is my personal setup script. If you want to use it, you'll need to fork it and modify the dotfiles repository URL, email addresses, and other personal settings to match your preferences. For a more generic starting point, check out the `general` branch.
-
-#### Quick Start (For Me)
+#### Quick Setup
 ```bash
-git clone <repository-url>
+# Clone the repository
+git clone <your-repository-url>
 cd macos-setup
-chmod +x macos-setup.sh
-./macos-setup.sh
+
+# Make scripts executable
+chmod +x modify-settings.sh ensure-setings.sh
+
+# Run settings modification (for regular machine)
+./modify-settings.sh N
+
+# Run settings modification (for server machine)
+./modify-settings.sh Y
+
+# Verify settings interactively
+./ensure-setings.sh
 ```
 
-#### Interactive Setup
-The script will prompt you for:
-1. **Machine Type**: Server or regular machine
-2. **Developer Setup**: Whether to install development tools
-3. **Optional Software**: Various applications and tools
-4. **Dotfiles**: Whether to fetch and install personal dotfiles
-5. **SSH Key**: GitHub SSH key generation
+#### Machine Types
 
-### Project Structure
+**Regular Machine** (`./modify-settings.sh N`):
+- Standard power management settings
+- Disabled sharing services for security
+- Optimized for personal/work use
+- Normal sleep and display settings
 
-```
-macos-setup/
-├── macos-setup.sh          # Main setup script
-├── dialog/                 # User interaction utilities
-│   ├── settings.icns       # Icon for dialogs
-│   └── user-dialog.sh      # Dialog helper functions
-├── general/                # Core setup scripts
-│   ├── ensure-settings.sh  # Settings verification
-│   ├── install-software.sh # Software installation
-│   ├── modify-settings.sh  # System configuration
-│   └── open-apps.sh        # Application launcher
-├── server/                 # Home Assistant server setup
-│   ├── install-hass.sh     # HA installation script
-│   └── start-hass/         # Launch agent configuration
-└── utils/                  # Utility scripts
-    └── get-dotfiles.sh     # Dotfiles management
-```
+**Server Machine** (`./modify-settings.sh Y`):
+- Always-on power configuration
+- Enabled screen sharing, SSH, and file sharing
+- Wake-on-LAN and network optimizations
+- Minimal sleep settings for continuous operation
 
 ### Requirements
 
 - macOS (tested on recent versions)
 - Administrator privileges
-- Internet connection
-- GitHub account (for SSH key setup and dotfiles)
+- Terminal access
 
-### Configuration
+### Settings Categories
 
-#### Server Mode
-When running in server mode, the script:
-- Enables screen sharing, SSH, and file sharing
-- Optimizes power settings for always-on operation
-- Installs VirtualBox and Home Assistant
-- Configures automatic VM startup
-- Skips GUI applications and development tools
+#### Power Management
+- Sleep configuration for battery, power adapter, and UPS
+- Display sleep timing
+- Power Nap and lid wake settings
+- Auto-restart and TCP keep-alive (server mode)
 
-#### Developer Mode
-Developer mode includes:
-- Full development environment setup
-- IDE and editor installation
-- Programming language runtimes
-- Cloud development tools
-- Directory structure for projects
+#### System Appearance
+- Dark mode interface
+- Scroll bar behavior
+- Sidebar sizing
+- Menu bar customization
+
+#### Dock Configuration
+- Size and magnification settings
+- Auto-hide behavior with custom timing
+- Recent applications display
+- Process indicators
+
+#### Finder Optimization
+- Default view settings (list view)
+- Path bar and status bar visibility
+- Desktop icon preferences
+- Search scope configuration
+- Sidebar organization
+
+#### Security Settings
+- Immediate password requirement after screen saver
+- Secure keyboard entry in Terminal
+- Screen capture settings and location
 
 ### Customization
 
-#### Modifying Software Lists
-Edit `general/install-software.sh` to:
-- Add/remove applications from the essential list
-- Modify optional software prompts
-- Update version numbers and download URLs
+#### Modifying Settings
+Edit `modify-settings.sh` to customize:
+- Power management timings
+- Appearance preferences
+- Dock sizing and behavior
+- Finder default settings
+- Security requirements
 
-#### System Settings
-Customize `general/modify-settings.sh` to:
-- Add new system preferences
-- Modify power management settings
-- Configure additional sharing services
+#### Adding New Verifications
+Edit `ensure-setings.sh` to add new settings verification:
+```bash
+settings_tabs+=(
+    "New Setting ## x-apple.systempreferences:com.apple.YourPreferencePane"
+)
+```
 
-#### Using This Script for Your Own Setup
-If you want to adapt this script for your own use:
+### File Structure
 
-1. **Fork this repository** and switch to the `general` branch for a more generic starting point
-2. **Update the dotfiles repository** in `utils/get-dotfiles.sh`:
-   ```bash
-   git clone https://github.com/yourusername/dotfiles.git ~/dotfiles
-   ```
-3. **Modify email addresses** in the SSH key generation section
-4. **Customize software lists** to match your preferences
-5. **Update system settings** to your liking
-
-The current main branch is specifically configured for my personal setup with my email (aguilarcarboni@gmail.com) and my dotfiles repository.
-
-### Security Notes
-
-- The script requires administrator privileges for system modifications
-- SSH keys are generated with ECDSA 521-bit encryption
-- Dotfiles are encrypted and require a passphrase for decryption
-- GPG keys are properly configured with correct permissions
+```
+macos-setup/
+├── modify-settings.sh      # Main settings configuration script
+├── ensure-setings.sh       # Interactive settings verification
+└── dialog/                 # Dialog utilities and icons
+    ├── settings.icns       # Icon for dialog windows
+    └── user-dialog.sh      # Dialog helper functions
+```
 
 ### Troubleshooting
 
 #### Common Issues
-1. **Xcode CLI Tools**: If installation fails, manually run `xcode-select --install`
-2. **Homebrew**: Check internet connection if Homebrew installation fails
-3. **Virtual Machine**: Ensure VirtualBox is properly installed before HA setup
-4. **SSH Keys**: Make sure to add the generated key to your GitHub account
+1. **Permission Denied**: Ensure you have administrator privileges
+2. **Settings Not Applied**: Some settings require logout/restart to take effect
+3. **System Settings Won't Open**: Try killing existing System Settings processes
 
-#### Logs
-The script provides verbose output for debugging. Check terminal output for specific error messages and installation progress.
+#### Manual Verification
+After running `modify-settings.sh`, use `ensure-setings.sh` to verify:
+- All critical settings were applied correctly
+- System-specific configurations are appropriate
+- Manual adjustments needed for personal preferences
 
 ### Contributing
 
-While this is my personal setup script, feel free to submit issues if you find bugs or have suggestions for improvements. If you're using this as a base for your own setup:
+Feel free to submit issues and enhancement requests! To contribute:
 
-1. Consider working from the `general` branch as a starting point
-2. Test changes on a clean macOS installation
-3. Update documentation for new features
-4. Follow existing script conventions and error handling
+1. Fork the repository
+2. Create a feature branch
+3. Test changes on a clean macOS installation
+4. Submit a pull request with detailed description
 
 ### License
 
-This project is my personal macOS setup automation. Feel free to fork and adapt it for your own needs, but remember to update all the personal settings, email addresses, and repository URLs to match your own preferences.
+This project is open source. Feel free to use, modify, and distribute according to your needs.
 
-### created by [@aguilarcarboni](https://github.com/aguilarcarboni/)
+---
+
+*Automate your macOS setup and never manually configure system settings again!*
