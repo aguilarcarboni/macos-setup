@@ -120,17 +120,11 @@ brew install --cask notion
 # Obsidian
 brew install --cask obsidian
 
-# Collections
-mas install 1568395334
-
 # WhatsApp
 mas install 310633997
 
 # Wipr
 mas install 1662217862
-
-# Amazon Q
-brew install --cask amazon-q
 
 ###############################################################################
 # Install Optional Applications
@@ -146,6 +140,12 @@ fi
 read -p "Do you want to install Swiptv? (Y/n): " swiptv
 if [[ -z "${swiptv}" || "${swiptv}" =~ ^[Yy]$ ]]; then
     mas install 1658538188
+fi
+
+# UHF
+read -p "Do you want to install UHF? (Y/n): " uhf
+if [[ -z "${uhf}" || "${uhf}" =~ ^[Yy]$ ]]; then
+    mas install 6443751726
 fi
 
 # Office tools
@@ -180,6 +180,9 @@ if [[ -z "${developer}" || "${developer}" =~ ^[Yy]$ ]]; then
 
     # Select Xcode Version
     sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+
+    # Apple Developer
+    mas install 640199958
     
 fi
 
@@ -217,6 +220,12 @@ if [[ -z "${developer}" || "${developer}" =~ ^[Yy]$ ]]; then
     read -p "Install SF Symbols? (Y/n): " sf_symbols
     if [[ -z "${sf_symbols}" || "${sf_symbols}" =~ ^[Yy]$ ]]; then
         brew install --cask sf-symbols
+    fi
+
+    # Beyond Compare
+    read -p "Install Beyond Compare? (Y/n): " beyond_compare
+    if [[ -z "${beyond_compare}" || "${beyond_compare}" =~ ^[Yy]$ ]]; then
+        brew install --cask beyond-compare
     fi
 
 fi
