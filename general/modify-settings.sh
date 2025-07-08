@@ -5,7 +5,6 @@
 # TODO:
 # Setup airplay reciever and handoff
 # Setup mouse wheel
-# Keyboard shortcuts
 # Safari settings
 # Mail settings
 
@@ -534,6 +533,9 @@ defaults write com.apple.finder OpenWindowForNewRemovableDisk -bool true
 
 # Set Finder keyboard shortcut to open new terminal at folder using CMD + Shift + T
 defaults write com.apple.finder NSUserKeyEquivalents -dict-add "New Terminal at Folder" "@\$t"
+
+# Set Numbers shortcut to export a CSV file using CMD + Shift + E
+defaults write com.apple.Numbers NSUserKeyEquivalents -dict-add "CSV..." "@\$e"
 
 ################################################################################
 # Photos                                                                 
