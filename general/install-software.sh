@@ -111,9 +111,6 @@ fi
 # Install mas
 brew install mas
 
-# ChatGPT
-brew install --cask chatgpt
-
 # Notion
 brew install --cask notion
 
