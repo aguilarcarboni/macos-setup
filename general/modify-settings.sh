@@ -532,12 +532,10 @@ defaults write com.apple.frameworks.diskimages auto-open-rw-root -bool true
 defaults write com.apple.finder OpenWindowForNewRemovableDisk -bool true
 
 # Set Finder keyboard shortcut to open new terminal at folder using CMD + Shift + T
-defaults write com.apple.finder NSUserKeyEquivalents -dict-add "New Terminal at Folder" "@\$t"
-sudo defaults write com.apple.universalaccess com.apple.custommenu.apps -array-add "com.apple.finder"
+defaults write com.apple.finder NSUserKeyEquivalents -dict-add 'New Terminal at Folder' '@$t'
 
 # Set Numbers shortcut to export a CSV file using CMD + Shift + E
-defaults write com.apple.Numbers NSUserKeyEquivalents -dict-add "CSV..." "@\$e"
-sudo defaults write com.apple.universalaccess com.apple.custommenu.apps -array-add "com.apple.iWork.Numbers"
+defaults write com.apple.iWork.Numbers NSUserKeyEquivalents -dict-add 'CSV...' '@$e'
 
 ################################################################################
 # Photos                                                                 
