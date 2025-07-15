@@ -117,6 +117,9 @@ mas install 310633997
 # Wipr
 mas install 1662217862
 
+# Raycast
+brew install --cask raycast
+
 ###############################################################################
 # Install Optional Applications
 ###############################################################################
@@ -131,12 +134,6 @@ fi
 read -p "Do you want to install Swiptv? (Y/n): " swiptv
 if [[ -z "${swiptv}" || "${swiptv}" =~ ^[Yy]$ ]]; then
     mas install 1658538188
-fi
-
-# UHF
-read -p "Do you want to install UHF? (Y/n): " uhf
-if [[ -z "${uhf}" || "${uhf}" =~ ^[Yy]$ ]]; then
-    mas install 6443751726
 fi
 
 # Office tools
