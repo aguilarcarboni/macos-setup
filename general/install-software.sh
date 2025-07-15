@@ -160,8 +160,8 @@ if [[ -z "${developer}" || "${developer}" =~ ^[Yy]$ ]]; then
     # Watchman
     brew install watchman
 
-    # Windsurf
-    brew install --cask windsurf
+    # Cursor
+    brew install --cask cursor
     
     # Xcode
     mas install 497799835
@@ -180,10 +180,10 @@ fi
 
 if [[ -z "${developer}" || "${developer}" =~ ^[Yy]$ ]]; then
 
-    # ollama
-    read -p "Install ollama? (Y/n): " ollama
-    if [[ -z "${ollama}" || "${ollama}" =~ ^[Yy]$ ]]; then
-        brew install ollama
+    # Beyond Compare
+    read -p "Install Beyond Compare? (Y/n): " beyond_compare
+    if [[ -z "${beyond_compare}" || "${beyond_compare}" =~ ^[Yy]$ ]]; then
+        brew install --cask beyond-compare
     fi
 
     # Docker
@@ -192,12 +192,6 @@ if [[ -z "${developer}" || "${developer}" =~ ^[Yy]$ ]]; then
         brew install --cask docker
     fi
 
-    # UTM
-    read -p "Install UTM? (Y/n): " utm
-    if [[ -z "${utm}" || "${utm}" =~ ^[Yy]$ ]]; then
-        brew install --cask utm
-    fi
-    
     # Github
     read -p "Install Github? (Y/n): " github
     if [[ -z "${github}" || "${github}" =~ ^[Yy]$ ]]; then
@@ -210,10 +204,10 @@ if [[ -z "${developer}" || "${developer}" =~ ^[Yy]$ ]]; then
         brew install --cask sf-symbols
     fi
 
-    # Beyond Compare
-    read -p "Install Beyond Compare? (Y/n): " beyond_compare
-    if [[ -z "${beyond_compare}" || "${beyond_compare}" =~ ^[Yy]$ ]]; then
-        brew install --cask beyond-compare
+    # UTM
+    read -p "Install UTM? (Y/n): " utm
+    if [[ -z "${utm}" || "${utm}" =~ ^[Yy]$ ]]; then
+        brew install --cask utm
     fi
 
 fi
