@@ -111,12 +111,6 @@ fi
 # Install mas
 brew install mas
 
-# Notion
-brew install --cask notion
-
-# Obsidian
-brew install --cask obsidian
-
 # WhatsApp
 mas install 310633997
 
