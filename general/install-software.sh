@@ -46,7 +46,12 @@ if [[ -z "${server}" || "${server}" =~ ^[Yy]$ ]]; then
 fi
 
 # Install essential packages
-brew install git gnupg btop nmap cmatrix fastfetch neovim
+brew install git gnupg btop nmap cmatrix fastfetch neovim php
+
+# Audiobook packages
+brew tap sandreas/tap
+brew install ffmpeg fdk-aac-encoder mp4v2
+brew install --ignore-dependencies sandreas/tap/m4b-tool
 
 # Install Python
 brew install pyenv pyenv-virtualenv
@@ -131,6 +136,11 @@ fi
 read -p "Do you want to install Swiptv? (Y/n): " swiptv
 if [[ -z "${swiptv}" || "${swiptv}" =~ ^[Yy]$ ]]; then
     mas install 1658538188
+fi
+
+read -p "Do you want to install Transmission? (Y/n): " transmission
+if [[ -z "${transmission}" || "${transmission}" =~ ^[Yy]$ ]]; then
+    brew install --cask transmission
 fi
 
 # Office tools
