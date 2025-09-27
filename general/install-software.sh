@@ -126,23 +126,6 @@ mas install 1662217862
 # Install Optional Applications
 ###############################################################################
 
-# Smart Comic
-read -p "Do you want to install Smart Comic? (Y/n): " simple_comic
-if [[ -z "${simple_comic}" || "${simple_comic}" =~ ^[Yy]$ ]]; then
-    mas install 1511175212
-fi
-
-# Swiptv
-read -p "Do you want to install Swiptv? (Y/n): " swiptv
-if [[ -z "${swiptv}" || "${swiptv}" =~ ^[Yy]$ ]]; then
-    mas install 1658538188
-fi
-
-read -p "Do you want to install Transmission? (Y/n): " transmission
-if [[ -z "${transmission}" || "${transmission}" =~ ^[Yy]$ ]]; then
-    brew install --cask transmission
-fi
-
 # Office tools
 read -p "Do you want to install Office tools? (Y/n): " office_tools
 if [[ -z "${office_tools}" || "${office_tools}" =~ ^[Yy]$ ]]; then
@@ -186,12 +169,6 @@ fi
 ###############################################################################
 
 if [[ -z "${developer}" || "${developer}" =~ ^[Yy]$ ]]; then
-
-    # Beyond Compare
-    read -p "Install Beyond Compare? (Y/n): " beyond_compare
-    if [[ -z "${beyond_compare}" || "${beyond_compare}" =~ ^[Yy]$ ]]; then
-        brew install --cask beyond-compare
-    fi
 
     # Docker
     read -p "Install Docker? (Y/n): " docker
