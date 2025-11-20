@@ -122,6 +122,8 @@ mas install 310633997
 # Wipr
 mas install 1662217862
 
+# Multiviewer
+
 ###############################################################################
 # Install Optional Applications
 ###############################################################################
@@ -193,6 +195,8 @@ if [[ -z "${developer}" || "${developer}" =~ ^[Yy]$ ]]; then
     if [[ -z "${utm}" || "${utm}" =~ ^[Yy]$ ]]; then
         brew install --cask utm
     fi
+
+    # Beyond Compare
 
 fi
 
