@@ -133,13 +133,13 @@ read -p "Do you want to install Office tools? (Y/n): " office_tools
 if [[ -z "${office_tools}" || "${office_tools}" =~ ^[Yy]$ ]]; then
 
     # Pages
-    mas install 409201541
+    mas install 361309726
     
     # Numbers
-    mas install 409203825
+    mas install 361304891
     
     # Keynote
-    mas install 409183694
+    mas install 361285480
     
 fi
 
@@ -149,20 +149,14 @@ fi
 
 if [[ -z "${developer}" || "${developer}" =~ ^[Yy]$ ]]; then
 
-    # Watchman
-    brew install watchman
-
     # Cursor
-    brew install --cask cursor
+    brew install --cask codex
     
     # Xcode
     mas install 497799835
 
     # Select Xcode Version
     sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
-
-    # Apple Developer
-    mas install 640199958
     
 fi
 
@@ -178,25 +172,11 @@ if [[ -z "${developer}" || "${developer}" =~ ^[Yy]$ ]]; then
         brew install --cask docker
     fi
 
-    # Github
-    read -p "Install Github? (Y/n): " github
-    if [[ -z "${github}" || "${github}" =~ ^[Yy]$ ]]; then
-        brew install --cask github
-    fi
-
     # SF Symbols
     read -p "Install SF Symbols? (Y/n): " sf_symbols
     if [[ -z "${sf_symbols}" || "${sf_symbols}" =~ ^[Yy]$ ]]; then
         brew install --cask sf-symbols
     fi
-
-    # UTM
-    read -p "Install UTM? (Y/n): " utm
-    if [[ -z "${utm}" || "${utm}" =~ ^[Yy]$ ]]; then
-        brew install --cask utm
-    fi
-
-    # Beyond Compare
 
 fi
 
