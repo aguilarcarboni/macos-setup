@@ -122,6 +122,9 @@ mas install 310633997
 # Wipr
 mas install 1662217862
 
+# ChatGPT
+brew install --cask chatgpt
+
 # Multiviewer
 
 ###############################################################################
@@ -148,15 +151,15 @@ fi
 ###############################################################################
 
 if [[ -z "${developer}" || "${developer}" =~ ^[Yy]$ ]]; then
-
-    # Cursor
-    brew install --cask codex
     
     # Xcode
     mas install 497799835
 
     # Select Xcode Version
     sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+
+    # VS Code
+    brew install --cask visual-studio-code
     
 fi
 
