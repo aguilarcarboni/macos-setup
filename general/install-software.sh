@@ -160,6 +160,9 @@ if [[ -z "${developer}" || "${developer}" =~ ^[Yy]$ ]]; then
 
     # VS Code
     brew install --cask visual-studio-code
+
+    # Google Cloud CLI
+    brew install --cask gcloud-cli
     
 fi
 

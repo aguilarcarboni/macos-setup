@@ -11,7 +11,6 @@ set -o pipefail
 
 echo "Opening applications..."
 
-open -a "Amazon Q"
 open -a "Wipr"
 
 echo "Successfully opened applications."
