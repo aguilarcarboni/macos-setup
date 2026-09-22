@@ -9,18 +9,24 @@ set -o pipefail
 # Load Home Assistant Launch Agent
 ###############################################################################
 
-# Copy start-hass.sh to ~/Developer/Scripts
-mkdir -p ~/Developer/Scripts/start-hass/
-cp start-hass.sh ~/Developer/Scripts/start-hass/
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+START_HASS_DIR="$HOME/Developer/Scripts/start-hass"
+mkdir -p "$START_HASS_DIR" "$HOME/Library/LaunchAgents"
 
-# Copy com.user.starthass.plist to ~/Library/LaunchAgents
-cp com.user.starthass.plist ~/Library/LaunchAgents
+# Copy the startup script and create a plist for the current user.
+cp "$SCRIPT_DIR/start-hass.sh" "$START_HASS_DIR/start-hass.sh"
+chmod 755 "$START_HASS_DIR/start-hass.sh"
 
 # Load the launch agent in the current user's GUI launchd domain.
 LAUNCH_AGENT="$HOME/Library/LaunchAgents/com.user.starthass.plist"
 GUI_DOMAIN="gui/$(id -u)"
 
+sed "s|/Users/aguilarcarboni|$HOME|g" "$SCRIPT_DIR/com.user.starthass.plist" > "$LAUNCH_AGENT"
+chmod 644 "$LAUNCH_AGENT"
+chown "$(id -un):$(id -gn)" "$LAUNCH_AGENT" "$START_HASS_DIR/start-hass.sh"
+
 launchctl bootout "$GUI_DOMAIN/com.user.starthass" 2>/dev/null || true
+launchctl remove com.user.starthass 2>/dev/null || true
 launchctl bootstrap "$GUI_DOMAIN" "$LAUNCH_AGENT"
 
 # Check if the launch agent is loaded.
