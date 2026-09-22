@@ -119,11 +119,27 @@ fi
 if [[ -z "${BRIDGE_INTERFACE:-}" ]]; then
     DEFAULT_INTERFACE="$(route -n get default 2>/dev/null | awk '/interface:/{print $2}')"
     BRIDGED_INTERFACES="$("$VBOXMANAGE" list bridgedifs | awk -F': ' '/^Name:/{sub(/^[[:space:]]+/, "", $2); print $2}')"
-    if [[ -n "$DEFAULT_INTERFACE" ]]; then
-        BRIDGE_INTERFACE="$(printf '%s\n' "$BRIDGED_INTERFACES" | awk -v iface="$DEFAULT_INTERFACE" '$0 == iface || index($0, iface ":") == 1 {print; exit}')"
-    fi
+    while IFS= read -r candidate; do
+        [[ -z "$candidate" ]] && continue
+        candidate_interface="${candidate%%:*}"
+        if [[ "$candidate_interface" == "$DEFAULT_INTERFACE" ]] && ifconfig "$candidate_interface" >/dev/null 2>&1; then
+            hardware_port="$(networksetup -listallhardwareports 2>/dev/null | awk -v iface="$candidate_interface" '
+                /^Hardware Port:/ {port=$0; sub(/^Hardware Port: /, "", port)}
+                /^Device:/ && $2 == iface {print port; exit}')"
+            BRIDGE_INTERFACE="$candidate"
+            [[ "$candidate" == "$candidate_interface" && -n "$hardware_port" ]] && BRIDGE_INTERFACE="$candidate_interface: $hardware_port"
+            break
+        fi
+    done <<< "$BRIDGED_INTERFACES"
     if [[ -z "$BRIDGE_INTERFACE" ]]; then
-        BRIDGE_INTERFACE="$(printf '%s\n' "$BRIDGED_INTERFACES" | sed -n '1p')"
+        while IFS= read -r candidate; do
+            [[ -z "$candidate" ]] && continue
+            candidate_interface="${candidate%%:*}"
+            if ifconfig "$candidate_interface" >/dev/null 2>&1; then
+                BRIDGE_INTERFACE="$candidate"
+                break
+            fi
+        done <<< "$BRIDGED_INTERFACES"
     fi
 fi
 if [[ -z "${BRIDGE_INTERFACE:-}" ]]; then
