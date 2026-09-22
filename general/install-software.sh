@@ -26,9 +26,10 @@ if ! xcode-select -p &> /dev/null; then
     xcode-select --install
 fi
 
-# Server setup does not require Homebrew. VirtualBox must already be installed
-# so that install-hass.sh can use VBoxManage to create the Home Assistant VM.
+# Server setup does not require Homebrew. Install VirtualBox directly, then
+# create the Home Assistant VM.
 if [[ "${server}" =~ ^[Yy]$ ]]; then
+    bash server/install-virtualbox.sh
     bash server/install-hass.sh
     exit 0
 fi
