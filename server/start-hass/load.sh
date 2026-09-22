@@ -11,7 +11,15 @@ set -o pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 START_HASS_DIR="$HOME/Developer/Scripts/start-hass"
-mkdir -p "$START_HASS_DIR" "$HOME/Library/LaunchAgents"
+LAUNCH_AGENTS_DIR="$HOME/Library/LaunchAgents"
+
+if [[ -e "$LAUNCH_AGENTS_DIR" || -L "$LAUNCH_AGENTS_DIR" ]] && [[ ! -d "$LAUNCH_AGENTS_DIR" ]]; then
+    BACKUP_PATH="${LAUNCH_AGENTS_DIR}.backup-$(date +%Y%m%d%H%M%S)"
+    echo "Backing up conflicting LaunchAgents path to: $BACKUP_PATH"
+    mv "$LAUNCH_AGENTS_DIR" "$BACKUP_PATH"
+fi
+
+mkdir -p "$START_HASS_DIR" "$LAUNCH_AGENTS_DIR"
 
 # Copy the startup script and create a plist for the current user.
 cp "$SCRIPT_DIR/start-hass.sh" "$START_HASS_DIR/start-hass.sh"
