@@ -12,10 +12,6 @@ set -o pipefail
 echo "Installing Home Assistant..."
 
 VERSION="15.2"
-RESET_VM="${RESET_VM:-0}"
-if [[ "${1:-}" == "--fresh" ]]; then
-    RESET_VM="1"
-fi
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 VM_PATH="$HOME/Developer/Virtual Machines"
 DISK_IMAGES_PATH="$VM_PATH/Disk Images"
@@ -25,10 +21,9 @@ VDI_PATH="$DISK_IMAGES_PATH/haos_ova-$VERSION.vdi"
 # Create Disk Images directory
 mkdir -p "$DISK_IMAGES_PATH" "$VM_PATH/Home Assistant" "$HOME/Developer/Scripts"
 
-# A fresh run must not reuse a previous archive or disk image.
-if [[ "$RESET_VM" == "1" ]]; then
-    rm -f "$ZIP_PATH" "$VDI_PATH"
-fi
+# This setup script is intended for fresh installations. Do not reuse a prior
+# archive or disk image.
+rm -f "$ZIP_PATH" "$VDI_PATH"
 
 # Remove an incomplete archive left by an interrupted download.
 if [[ -f "$ZIP_PATH" ]] && ! unzip -tq "$ZIP_PATH" >/dev/null 2>&1; then
@@ -125,13 +120,11 @@ if [[ -z "$VBOXMANAGE" || ! -x "$VBOXMANAGE" ]]; then
     exit 1
 fi
 
-if [[ "$RESET_VM" == "1" ]]; then
-    echo "Resetting the Home Assistant VM and disk image for a clean install."
-    if "$VBOXMANAGE" list vms | grep -q "\"$VM_NAME\""; then
-        "$VBOXMANAGE" unregistervm "$VM_NAME" --delete
-    fi
-    rm -rf "$VM_PATH/Home Assistant"
+echo "Resetting the Home Assistant VM for a clean install."
+if "$VBOXMANAGE" list vms | grep -q "\"$VM_NAME\""; then
+    "$VBOXMANAGE" unregistervm "$VM_NAME" --delete
 fi
+rm -rf "$VM_PATH/Home Assistant"
 
 if [[ -z "${BRIDGE_INTERFACE:-}" ]]; then
     DEFAULT_INTERFACE="$(route -n get default 2>/dev/null | awk '/interface:/{print $2}')"
