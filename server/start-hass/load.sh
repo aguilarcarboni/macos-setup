@@ -20,7 +20,7 @@ cp com.user.starthass.plist ~/Library/LaunchAgents
 LAUNCH_AGENT="$HOME/Library/LaunchAgents/com.user.starthass.plist"
 GUI_DOMAIN="gui/$(id -u)"
 
-launchctl bootout "$GUI_DOMAIN" "$LAUNCH_AGENT" 2>/dev/null || true
+launchctl bootout "$GUI_DOMAIN/com.user.starthass" 2>/dev/null || true
 launchctl bootstrap "$GUI_DOMAIN" "$LAUNCH_AGENT"
 
 # Check if the launch agent is loaded.

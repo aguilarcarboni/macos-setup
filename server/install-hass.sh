@@ -21,13 +21,22 @@ VDI_PATH="$DISK_IMAGES_PATH/haos_ova-$VERSION.vdi"
 # Create Disk Images directory
 mkdir -p "$DISK_IMAGES_PATH" "$VM_PATH/Home Assistant" "$HOME/Developer/Scripts"
 
-# Download the disk image
-if [[ ! -f "$ZIP_PATH" && ! -f "$VDI_PATH" ]]; then
-    curl -L "https://github.com/home-assistant/operating-system/releases/download/$VERSION/haos_ova-$VERSION.vdi.zip" -o "$ZIP_PATH"
+# Remove an incomplete archive left by an interrupted download.
+if [[ -f "$ZIP_PATH" ]] && ! unzip -tq "$ZIP_PATH" >/dev/null 2>&1; then
+    echo "Removing incomplete Home Assistant disk image archive."
+    rm -f "$ZIP_PATH"
 fi
 
-# Unzip the disk image
+# Download the disk image.
+if [[ ! -f "$ZIP_PATH" && ! -f "$VDI_PATH" ]]; then
+    curl --fail --location --retry 3 --retry-all-errors \
+        "https://github.com/home-assistant/operating-system/releases/download/$VERSION/haos_ova-$VERSION.vdi.zip" \
+        -o "$ZIP_PATH"
+fi
+
+# Unzip the disk image.
 if [[ ! -f "$VDI_PATH" ]]; then
+    unzip -tq "$ZIP_PATH" >/dev/null
     unzip "$ZIP_PATH" -d "$DISK_IMAGES_PATH"
 fi
 
@@ -109,7 +118,7 @@ fi
 
 if [[ -z "${BRIDGE_INTERFACE:-}" ]]; then
     DEFAULT_INTERFACE="$(route -n get default 2>/dev/null | awk '/interface:/{print $2}')"
-    BRIDGED_INTERFACES="$("$VBOXMANAGE" list bridgedifs | awk -F': ' '/^Name:/{print $2}')"
+    BRIDGED_INTERFACES="$("$VBOXMANAGE" list bridgedifs | awk -F': ' '/^Name:/{sub(/^[[:space:]]+/, "", $2); print $2}')"
     if [[ -n "$DEFAULT_INTERFACE" ]]; then
         BRIDGE_INTERFACE="$(printf '%s\n' "$BRIDGED_INTERFACES" | awk -v iface="$DEFAULT_INTERFACE" '$0 == iface || index($0, iface ":") == 1 {print; exit}')"
     fi
