@@ -26,37 +26,19 @@ if ! xcode-select -p &> /dev/null; then
     xcode-select --install
 fi
 
+# Server setup does not require Homebrew. VirtualBox must already be installed
+# so that install-hass.sh can use VBoxManage to create the Home Assistant VM.
+if [[ "${server}" =~ ^[Yy]$ ]]; then
+    bash server/install-hass.sh
+    exit 0
+fi
+
 # Download Homebrew
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 # Update and upgrade Homebrew
 brew update
 brew upgrade
-
-# Install server packages
-if [[ -z "${server}" || "${server}" =~ ^[Yy]$ ]]; then
-
-    # Install VirtualBox
-    case "$(uname -m)" in
-        arm64)
-            virtualbox_cask="virtualbox"
-            ;;
-        x86_64)
-            virtualbox_cask="virtualbox@6"
-            ;;
-        *)
-            echo "Error: Unsupported CPU architecture: $(uname -m)" >&2
-            exit 1
-            ;;
-    esac
-    echo "Installing VirtualBox package: $virtualbox_cask"
-    brew install --cask "$virtualbox_cask"
-
-    # Install Home Assistant Disk Image
-    sh server/install-hass.sh
-    
-    exit 0
-fi
 
 # Install essential packages
 brew install git gnupg btop nmap cmatrix fastfetch neovim php

@@ -18,8 +18,27 @@ sleep 5
 # Close VirtualBox Manager GUI to avoid keeping it open
 pkill -x VirtualBox
 
-VBOXMANAGE="/Applications/VirtualBox.app/Contents/MacOS/VBoxManage"
+VBOXMANAGE="${VBOXMANAGE:-}"
 VM_NAME="Home Assistant"
+
+if [[ -z "$VBOXMANAGE" ]] && command -v VBoxManage >/dev/null 2>&1; then
+    VBOXMANAGE="$(command -v VBoxManage)"
+fi
+if [[ -z "$VBOXMANAGE" ]]; then
+    for candidate in \
+        "/Applications/VirtualBox.app/Contents/MacOS/VBoxManage" \
+        "$HOME/Applications/VirtualBox.app/Contents/MacOS/VBoxManage" \
+        "/usr/local/bin/VBoxManage"; do
+        if [[ -x "$candidate" ]]; then
+            VBOXMANAGE="$candidate"
+            break
+        fi
+    done
+fi
+if [[ -z "$VBOXMANAGE" || ! -x "$VBOXMANAGE" ]]; then
+    echo "VirtualBox VBoxManage was not found." >&2
+    exit 1
+fi
 
 # Check if the VM "Home Assistant" is already running
 if ! "$VBOXMANAGE" list runningvms | grep -q "\"$VM_NAME\""; then

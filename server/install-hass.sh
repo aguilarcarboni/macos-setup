@@ -12,23 +12,26 @@ set -o pipefail
 echo "Installing Home Assistant..."
 
 VERSION="15.2"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+VM_PATH="$HOME/Developer/Virtual Machines"
+DISK_IMAGES_PATH="$VM_PATH/Disk Images"
+ZIP_PATH="$DISK_IMAGES_PATH/haos_ova-$VERSION.vdi.zip"
+VDI_PATH="$DISK_IMAGES_PATH/haos_ova-$VERSION.vdi"
 
 # Create Disk Images directory
-mkdir -p ~/Developer/Virtual\ Machines/Disk\ Images
-mkdir -p ~/Developer/Virtual\ Machines/Home\ Assistant
-mkdir -p ~/Developer/Scripts
+mkdir -p "$DISK_IMAGES_PATH" "$VM_PATH/Home Assistant" "$HOME/Developer/Scripts"
 
 # Download the disk image
-if [ ! -f "~/Developer/Virtual\ Machines/Disk\ Images/haos_ova-$VERSION.vdi.zip" ]; then
-    curl -L "https://github.com/home-assistant/operating-system/releases/download/$VERSION/haos_ova-$VERSION.vdi.zip" -o ~/Developer/Virtual\ Machines/Disk\ Images/haos_ova-$VERSION.vdi.zip
+if [[ ! -f "$ZIP_PATH" && ! -f "$VDI_PATH" ]]; then
+    curl -L "https://github.com/home-assistant/operating-system/releases/download/$VERSION/haos_ova-$VERSION.vdi.zip" -o "$ZIP_PATH"
 fi
 
 # Unzip the disk image
-if [ ! -f "~/Developer/Virtual\ Machines/Disk\ Images/haos_ova-$VERSION.vdi" ]; then
-    unzip ~/Developer/Virtual\ Machines/Disk\ Images/haos_ova-$VERSION.vdi.zip -d ~/Developer/Virtual\ Machines/Disk\ Images
+if [[ ! -f "$VDI_PATH" ]]; then
+    unzip "$ZIP_PATH" -d "$DISK_IMAGES_PATH"
 fi
 
-rm ~/Developer/Virtual\ Machines/Disk\ Images/haos_ova-$VERSION.vdi.zip
+[[ -f "$ZIP_PATH" ]] && rm "$ZIP_PATH"
 
 ###############################################################################
 # Setup Home Assistant VM
@@ -36,10 +39,32 @@ rm ~/Developer/Virtual\ Machines/Disk\ Images/haos_ova-$VERSION.vdi.zip
 
 echo "Setting up Home Assistant VM..."
 
-VBOXMANAGE="/Applications/VirtualBox.app/Contents/MacOS/VBoxManage"
+VBOXMANAGE="${VBOXMANAGE:-}"
 VM_NAME="Home Assistant"
-VDI_PATH="$HOME/Developer/Virtual Machines/Disk Images/haos_ova-$VERSION.vdi"
-VM_PATH="$HOME/Developer/Virtual Machines"
+
+if [[ -z "$VBOXMANAGE" ]] && command -v VBoxManage >/dev/null 2>&1; then
+    VBOXMANAGE="$(command -v VBoxManage)"
+fi
+if [[ -z "$VBOXMANAGE" ]]; then
+    for candidate in \
+        "/Applications/VirtualBox.app/Contents/MacOS/VBoxManage" \
+        "$HOME/Applications/VirtualBox.app/Contents/MacOS/VBoxManage" \
+        "/usr/local/bin/VBoxManage"; do
+        if [[ -x "$candidate" ]]; then
+            VBOXMANAGE="$candidate"
+            break
+        fi
+    done
+fi
+if [[ -z "$VBOXMANAGE" || ! -x "$VBOXMANAGE" ]]; then
+    echo "VirtualBox VBoxManage was not found. Install VirtualBox before running this script." >&2
+    exit 1
+fi
+
+BRIDGE_INTERFACE="${BRIDGE_INTERFACE:-$(route -n get default 2>/dev/null | awk '/interface:/{print $2}')}"
+BRIDGE_INTERFACE="${BRIDGE_INTERFACE:-en0}"
+
+echo "Using network interface: $BRIDGE_INTERFACE"
 
 # Check if the VM already exists
 if ! "$VBOXMANAGE" list vms | grep -q "\"$VM_NAME\""; then
@@ -47,8 +72,8 @@ if ! "$VBOXMANAGE" list vms | grep -q "\"$VM_NAME\""; then
     "$VBOXMANAGE" createvm --name "$VM_NAME" --ostype "Oracle_64" --basefolder "$VM_PATH" --register
     # Set memory and CPU
     "$VBOXMANAGE" modifyvm "$VM_NAME" --memory 2048 --cpus 2 --firmware efi
-    # Set network to bridged (default to en0:Wi-Fi, change if needed)
-    "$VBOXMANAGE" modifyvm "$VM_NAME" --nic1 bridged --bridgeadapter1 en0
+    # Set network to bridged using the active default interface.
+    "$VBOXMANAGE" modifyvm "$VM_NAME" --nic1 bridged --bridgeadapter1 "$BRIDGE_INTERFACE"
     # Create SATA controller
     "$VBOXMANAGE" storagectl "$VM_NAME" --name "SATA" --add sata --controller IntelAhci
     # Attach the VDI disk
@@ -60,13 +85,16 @@ else
     echo "VM '$VM_NAME' already exists. Skipping creation."
 fi
 
+# Apply the current network interface even when the VM was created previously.
+"$VBOXMANAGE" modifyvm "$VM_NAME" --nic1 bridged --bridgeadapter1 "$BRIDGE_INTERFACE"
+
 ###############################################################################
 # Setup Launch Agent
 ###############################################################################
 
 # Load the launch agent
 # TODO: Currently, this is saved to the /Developer/Scripts directory, but it should be gotten from iCloud. Upgrade hardware.
-cd start-hass
+cd "$SCRIPT_DIR/start-hass"
 sh load.sh
 
 echo "Successfully installed Home Assistant VM."
