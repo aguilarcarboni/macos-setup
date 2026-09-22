@@ -107,8 +107,21 @@ if [[ -z "$VBOXMANAGE" || ! -x "$VBOXMANAGE" ]]; then
     exit 1
 fi
 
-BRIDGE_INTERFACE="${BRIDGE_INTERFACE:-$(route -n get default 2>/dev/null | awk '/interface:/{print $2}')}"
-BRIDGE_INTERFACE="${BRIDGE_INTERFACE:-en0}"
+if [[ -z "${BRIDGE_INTERFACE:-}" ]]; then
+    DEFAULT_INTERFACE="$(route -n get default 2>/dev/null | awk '/interface:/{print $2}')"
+    BRIDGED_INTERFACES="$("$VBOXMANAGE" list bridgedifs | awk -F': ' '/^Name:/{print $2}')"
+    if [[ -n "$DEFAULT_INTERFACE" ]]; then
+        BRIDGE_INTERFACE="$(printf '%s\n' "$BRIDGED_INTERFACES" | awk -v iface="$DEFAULT_INTERFACE" '$0 == iface || index($0, iface ":") == 1 {print; exit}')"
+    fi
+    if [[ -z "$BRIDGE_INTERFACE" ]]; then
+        BRIDGE_INTERFACE="$(printf '%s\n' "$BRIDGED_INTERFACES" | sed -n '1p')"
+    fi
+fi
+if [[ -z "${BRIDGE_INTERFACE:-}" ]]; then
+    echo "Error: VirtualBox found no bridged network interfaces." >&2
+    "$VBOXMANAGE" list bridgedifs >&2
+    exit 1
+fi
 
 echo "Using network interface: $BRIDGE_INTERFACE"
 
@@ -118,8 +131,6 @@ if ! "$VBOXMANAGE" list vms | grep -q "\"$VM_NAME\""; then
     "$VBOXMANAGE" createvm --name "$VM_NAME" --ostype "Oracle_64" --basefolder "$VM_PATH" --register
     # Set memory and CPU
     "$VBOXMANAGE" modifyvm "$VM_NAME" --memory 2048 --cpus 2 --firmware efi
-    # Set network to bridged using the active default interface.
-    "$VBOXMANAGE" modifyvm "$VM_NAME" --nic1 bridged --bridgeadapter1 "$BRIDGE_INTERFACE"
     # Create SATA controller
     "$VBOXMANAGE" storagectl "$VM_NAME" --name "SATA" --add sata --controller IntelAhci
     # Attach the VDI disk

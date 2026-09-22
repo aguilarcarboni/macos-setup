@@ -16,12 +16,12 @@ cp start-hass.sh ~/Developer/Scripts/start-hass/
 # Copy com.user.starthass.plist to ~/Library/LaunchAgents
 cp com.user.starthass.plist ~/Library/LaunchAgents
 
-# Load the launch agent
-if launchctl list | grep -q "com.user.starthass"; then
-    launchctl unload ~/Library/LaunchAgents/com.user.starthass.plist
-fi
+# Load the launch agent in the current user's GUI launchd domain.
+LAUNCH_AGENT="$HOME/Library/LaunchAgents/com.user.starthass.plist"
+GUI_DOMAIN="gui/$(id -u)"
 
-launchctl load ~/Library/LaunchAgents/com.user.starthass.plist
+launchctl bootout "$GUI_DOMAIN" "$LAUNCH_AGENT" 2>/dev/null || true
+launchctl bootstrap "$GUI_DOMAIN" "$LAUNCH_AGENT"
 
-# Check if the launch agent is loaded
-launchctl list | grep com.user.starthass
+# Check if the launch agent is loaded.
+launchctl print "$GUI_DOMAIN/com.user.starthass" >/dev/null
