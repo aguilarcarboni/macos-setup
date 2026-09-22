@@ -22,11 +22,10 @@ source "$fullPath/../dialog/user-dialog.sh"
 # Settings Tabs
 settings_tabs=(
     "Hostname ## x-apple.systempreferences:com.apple.SystemProfiler.AboutExtension"
-    "Control Center ## x-apple.systempreferences:com.apple.ControlCenter-Settings.extension"
-    "Wallpaper ## x-apple.systempreferences:com.apple.Wallpaper-Settings.extension"
     "Lock Screen ## x-apple.systempreferences:com.apple.Lock-Screen-Settings.extension"
-    "Apple ID (iCloud) ## x-apple.systempreferences:com.apple.preferences.AppleIDPrefPane?iCloud"
-    "Internet Accounts ## x-apple.systempreferences:com.apple.Internet-Accounts-Settings.extension"
+    "Sharing ## x-apple.systempreferences:com.apple.Sharing-Settings.extension"
+    "Battery ## x-apple.systempreferences:com.apple.Battery-Settings.extension"
+    "Users and Groups ## x-apple.systempreferences:com.apple.Users-Groups-Settings.extension"
 )
 
 # Open settings tabs
