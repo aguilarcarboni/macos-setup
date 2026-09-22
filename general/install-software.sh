@@ -121,6 +121,19 @@ mas install 1662217862
 # ChatGPT
 brew install --cask chatgpt
 
+# Markdown previews in Quick Look (regular and developer machines only)
+if [[ "${server}" =~ ^[Nn]$ ]]; then
+    brew install --cask --force qlmarkdown
+    attributes=$(xattr /Applications/QLMarkdown.app)
+    if [[ "$attributes" == *com.apple.quarantine* ]]; then
+        xattr -d com.apple.quarantine /Applications/QLMarkdown.app
+    fi
+    qlmanage -r
+    if pgrep -x Finder > /dev/null; then
+        killall Finder
+    fi
+fi
+
 # Multiviewer
 
 ###############################################################################

@@ -12,6 +12,7 @@ set -o pipefail
 echo "Opening applications..."
 
 open -a "Wipr"
+open -a "QLMarkdown"
 
 echo "Successfully opened applications."
 exit 0

@@ -24,6 +24,7 @@ This script supports both my regular developer machines and my home server setup
 - **Security Settings**: SSH key generation and GPG setup
 
 #### 📱 Software Installation
+- **Markdown previews (non-server Macs only)**: Force-installs QLMarkdown, removes its quarantine attribute when present, refreshes Quick Look, restarts Finder if running, and opens QLMarkdown during the app-launch step. Applies to both regular and developer machines; servers skip it.
 - **Essential Applications**: ChatGPT, Notion, Obsidian, WhatsApp, Collections, Wipr, Amazon Q
 - **Developer Tools**: Xcode, Windsurf IDE, Docker, Ollama, Watchman
 - **Development Environment**: Python (via pyenv), Node.js (via nvm), Git, Google Cloud SDK
