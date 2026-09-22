@@ -156,40 +156,42 @@ defaults write NSGlobalDomain AppleICUDateFormatStrings -dict-add 1 "d/M/y"
 # System Settings > General >Sharing
 ################################################################################
 
-# Disable Screen Sharing
-if sudo launchctl list | grep -q "com.apple.screensharing"; then
-    sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.screensharing.plist
-fi
+disable_system_service() {
+    local label="$1"
+    local plist="$2"
+    sudo launchctl disable "system/$label" 2>/dev/null || true
+    sudo launchctl bootout system "$plist" 2>/dev/null || true
+}
 
-# Disable Remote Login
-if sudo launchctl list | grep -q "com.openssh.sshd"; then
-    sudo launchctl unload -w /System/Library/LaunchDaemons/ssh.plist
-fi
+enable_system_service() {
+    local label="$1"
+    local plist="$2"
+    sudo launchctl enable "system/$label"
+    if ! sudo launchctl print "system/$label" >/dev/null 2>&1; then
+        sudo launchctl bootstrap system "$plist"
+    fi
+}
 
-# Disable File Sharing
-if sudo launchctl list | grep -q "com.apple.AppleFileServer"; then
-    sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.AppleFileServer.plist
-fi
-
-# Disable SMB
-if sudo launchctl list | grep -q "com.apple.smbd"; then
-    sudo launchctl unload -w /System/Library/LaunchDaemons/com.apple.smbd.plist
-fi
+# Disable services before applying the server/non-server policy.
+disable_system_service "com.apple.screensharing" "/System/Library/LaunchDaemons/com.apple.screensharing.plist"
+disable_system_service "com.openssh.sshd" "/System/Library/LaunchDaemons/ssh.plist"
+disable_system_service "com.apple.AppleFileServer" "/System/Library/LaunchDaemons/com.apple.AppleFileServer.plist"
+disable_system_service "com.apple.smbd" "/System/Library/LaunchDaemons/com.apple.smbd.plist"
 
 if [[ -z "${server}" || "${server}" =~ ^[Yy]$ ]]; then
 
     # Enable Screen Sharing
     sudo defaults write /var/db/launchd.db/com.apple.launchd/overrides.plist com.apple.screensharing -dict Disabled -bool false
-    sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.screensharing.plist
+    enable_system_service "com.apple.screensharing" "/System/Library/LaunchDaemons/com.apple.screensharing.plist"
 
     # Enable Remote Login
-    sudo launchctl load -w /System/Library/LaunchDaemons/ssh.plist
+    enable_system_service "com.openssh.sshd" "/System/Library/LaunchDaemons/ssh.plist"
 
     # Enable File Sharing
-    sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.AppleFileServer.plist
+    enable_system_service "com.apple.AppleFileServer" "/System/Library/LaunchDaemons/com.apple.AppleFileServer.plist"
 
     # Enable SMB
-    sudo launchctl load -w /System/Library/LaunchDaemons/com.apple.smbd.plist
+    enable_system_service "com.apple.smbd" "/System/Library/LaunchDaemons/com.apple.smbd.plist"
 fi
 
 ################################################################################
