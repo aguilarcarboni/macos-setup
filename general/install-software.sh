@@ -37,7 +37,20 @@ brew upgrade
 if [[ -z "${server}" || "${server}" =~ ^[Yy]$ ]]; then
 
     # Install VirtualBox
-    brew install --cask virtualbox
+    case "$(uname -m)" in
+        arm64)
+            virtualbox_cask="virtualbox"
+            ;;
+        x86_64)
+            virtualbox_cask="virtualbox@6"
+            ;;
+        *)
+            echo "Error: Unsupported CPU architecture: $(uname -m)" >&2
+            exit 1
+            ;;
+    esac
+    echo "Installing VirtualBox package: $virtualbox_cask"
+    brew install --cask "$virtualbox_cask"
 
     # Install Home Assistant Disk Image
     sh server/install-hass.sh

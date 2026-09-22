@@ -10,10 +10,23 @@ set -o pipefail
 ###############################################################################
 
 read -p "Is this a server? (Y/n): " server
-if [[ -z "${server}" || "${server}" =~ ^[Nn]$ ]]; then
-    read -p "Is this a developer machine? (Y/n): " developer
-else
+if [[ -z "${server}" || "${server}" =~ ^[Yy]$ ]]; then
+    server="Y"
     developer="N"
+elif [[ "${server}" =~ ^[Nn]$ ]]; then
+    server="N"
+    read -p "Is this a developer machine? (Y/n): " developer
+    if [[ -z "${developer}" || "${developer}" =~ ^[Yy]$ ]]; then
+        developer="Y"
+    elif [[ "${developer}" =~ ^[Nn]$ ]]; then
+        developer="N"
+    else
+        echo "Error: Please answer Y or N."
+        exit 1
+    fi
+else
+    echo "Error: Please answer Y or N."
+    exit 1
 fi
 
 ###############################################################################
@@ -41,7 +54,7 @@ sleep 1
 # Open Apps
 ###############################################################################
 
-if [[ -z "${server}" || "${server}" =~ ^[Nn]$ ]]; then
+if [[ "${server}" =~ ^[Nn]$ ]]; then
     sh general/open-apps.sh
 fi
 sleep 1
