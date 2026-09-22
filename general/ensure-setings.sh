@@ -13,11 +13,11 @@ echo "Ensuring settings are correct..."
 
 # Create Dialog
 fullPath="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-appIcon="/Users/aguilarcarboni/Library/Mobile Documents/com~apple~CloudDocs/Personal/Developer/Repositories/macos-setup/dialog/settings.icns"
+appIcon="$fullPath/../dialog/settings.icns"
 dialogTitle="System Settings"
 
 # Source the reusable UserDialog functions
-source "/Users/aguilarcarboni/Library/Mobile Documents/com~apple~CloudDocs/Personal/Developer/Repositories/macos-setup/dialog/user-dialog.sh"
+source "$fullPath/../dialog/user-dialog.sh"
 
 # Settings Tabs
 settings_tabs=(
